@@ -1,11 +1,14 @@
 import React, { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 
+const COLORS = ['#F59E0B', '#EAB308', '#3B82F6', '#10B981', '#9CA3AF'];
+
 export default function LifeSavingRulesChart({ analytics = {} }) {
   const { categories, values } = useMemo(() => {
     const byRule = analytics.by_life_saving_rule || {};
+    // Sort descending by count so the most violated rule is at top
     const sorted = Object.entries(byRule)
-      .sort((a, b) => a[1] - b[1]);
+      .sort((a, b) => a[1] - b[1]); // ECharts renders bottom-up, so ascending puts largest on top
     return {
       categories: sorted.map(([name]) => name),
       values: sorted.map(([, count]) => count),
@@ -18,97 +21,92 @@ export default function LifeSavingRulesChart({ analytics = {} }) {
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
-      backgroundColor: 'rgba(26, 35, 50, 0.95)',
-      borderColor: 'rgba(255,255,255,0.08)',
+      backgroundColor: '#FFFFFF',
+      borderColor: '#E2E8F0',
       borderWidth: 1,
-      textStyle: { color: '#F1F5F9', fontSize: 12, fontFamily: 'Inter, sans-serif' },
-      formatter: (params) => {
-        const p = params[0];
-        return (
-          `<div style="font-weight:700;margin-bottom:4px;color:#06B6D4">${p.name}</div>` +
-          `<span style="font-size:18px;font-weight:800;color:#F1F5F9">${p.value}</span>` +
-          ` <span style="opacity:0.5;color:#94A3B8">violations</span>`
-        );
-      },
+      textStyle: { color: '#111827', fontSize: 12, fontFamily: 'Inter, sans-serif' },
     },
     grid: {
-      left: 12,
-      right: 44,
-      top: 12,
-      bottom: 12,
+      left: 0,
+      right: 0,
+      top: 10,
+      bottom: 0,
       containLabel: true,
     },
     xAxis: {
       type: 'value',
-      axisLabel: { fontSize: 11, color: '#64748B', fontFamily: 'Inter, sans-serif' },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)', type: 'dashed' } },
-      axisLine: { show: false },
-      axisTick: { show: false },
-      minInterval: 1,
+      show: false, // Hide axis completely as per reference
+      max: hasData ? Math.max(...values) * 1.1 : 10,
     },
-    yAxis: {
-      type: 'category',
-      data: hasData ? categories : ['No Data'],
-      axisLabel: {
-        fontSize: 11,
-        color: '#94A3B8',
-        fontFamily: 'Inter, sans-serif',
-        width: 140,
-        overflow: 'truncate',
+    yAxis: [
+      {
+        type: 'category',
+        data: hasData ? categories : ['No Data'],
+        axisLabel: {
+          fontSize: 11,
+          color: '#111827',
+          fontFamily: 'Inter, sans-serif',
+          fontWeight: 600,
+          margin: 0, // Align closer to the left
+          padding: [0, 10, 25, 0], // Push label up above the bar
+          verticalAlign: 'bottom',
+          inside: true, // Keep inside so it aligns with the left edge of the bar
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        z: 10
       },
-      axisLine: { show: false },
-      axisTick: { show: false },
-    },
+      {
+        // Second yAxis for the count labels on the right side
+        type: 'category',
+        data: hasData ? values : [0],
+        axisLabel: {
+          fontSize: 11,
+          fontWeight: 800,
+          color: '#111827',
+          fontFamily: 'Inter, sans-serif',
+          margin: 0,
+          padding: [0, 0, 25, 10], // Push label up above the bar
+          verticalAlign: 'bottom',
+          inside: true,
+          formatter: (value) => value
+        },
+        axisLine: { show: false },
+        axisTick: { show: false },
+        z: 10
+      }
+    ],
     series: [
       {
         name: 'Violations',
         type: 'bar',
-        data: hasData ? values : [0],
-        barWidth: hasData ? '55%' : '35%',
+        data: hasData ? values.map((val, idx) => ({
+          value: val,
+          itemStyle: { color: COLORS[idx % COLORS.length] }
+        })) : [0],
+        barWidth: 8,
         itemStyle: {
-          borderRadius: [0, 6, 6, 0],
-          color: {
-            type: 'linear',
-            x: 0, y: 0, x2: 1, y2: 0,
-            colorStops: [
-              { offset: 0, color: '#06B6D4' },
-              { offset: 0.5, color: '#8B5CF6' },
-              { offset: 1, color: '#F43F5E' },
-            ],
-          },
+          borderRadius: 4,
         },
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 16,
-            shadowColor: 'rgba(6, 182, 212, 0.3)',
-          },
-        },
-        label: {
-          show: hasData,
-          position: 'right',
-          fontSize: 12,
-          fontWeight: 800,
+        showBackground: true,
+        backgroundStyle: {
           color: '#F1F5F9',
-          fontFamily: 'Inter, sans-serif',
+          borderRadius: 4,
         },
-        animationDelay: (idx) => idx * 120,
+        // We removed the label here because we are using the second yAxis to display the count on the right
       },
     ],
-    animationEasing: 'cubicOut',
   }), [categories, values, hasData]);
 
-  const chartHeight = Math.max(200, (hasData ? categories.length : 1) * 48 + 40);
-
   return (
-    <div className="glass-card p-5">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-bold text-white">Life-Saving Rules Compliance</h3>
-        <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">IOGP LSR</span>
+    <div className="h-full">
+      <div className="mb-2">
+        <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Life-Saving Rules Compliance (Breach Counts)</h3>
       </div>
       <ReactECharts
         option={option}
-        style={{ height: chartHeight }}
-        opts={{ renderer: 'canvas' }}
+        style={{ height: 180, width: '100%' }}
+        opts={{ renderer: 'svg' }}
         notMerge={true}
       />
     </div>

@@ -6,7 +6,7 @@ import Toast from '../components/Toast';
 import RiskLevelChart from '../components/charts/RiskLevelChart';
 import LifeSavingRulesChart from '../components/charts/LifeSavingRulesChart';
 import { getIncidents, getAnalytics, checkHealth } from '../services/api';
-import { AlertCircle, RefreshCw, Radio, BarChart3 } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function Dashboard() {
   const [incidents, setIncidents] = useState([]);
@@ -56,76 +56,72 @@ export default function Dashboard() {
   }, [fetchData]);
 
   return (
-    <div className="min-h-screen bg-[#0F1729] flex flex-col selection:bg-cyan-900/50 selection:text-cyan-200">
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
 
       <Header
         systemStatus={systemStatus}
-        onRefresh={() => fetchData(true)}
-        isRefreshing={refreshing}
         lastUpdated={lastUpdated}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+      {/* Toolbar / Legend strip matching reference */}
+      <div className="bg-white border-b border-gray-200 py-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="flex items-center space-x-4 text-[9px] font-bold text-gray-500 uppercase tracking-widest">
+            <span>SEVERITY SCALING:</span>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-red-500 rounded-full"/><span>Critical</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"/><span>High</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"/><span>Medium</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full"/><span>Low</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-green-500 rounded-full"/><span>Negligible</span></div>
+          </div>
+          {refreshing && (
+            <div className="flex items-center text-[10px] text-gray-400 font-bold">
+              <RefreshCw className="w-3 h-3 animate-spin mr-1" /> SYNCING
+            </div>
+          )}
+        </div>
+      </div>
 
-        {/* Error Banner */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
         {error && (
-          <div className="p-4 glass-card border-rose-500/30 text-rose-300 text-xs flex items-start space-x-3">
-            <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+          <div className="p-4 bg-red-50 border border-red-200 text-red-800 text-xs flex items-start space-x-3 rounded-md">
+            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <span className="font-bold block text-sm text-rose-200">Connection Warning</span>
-              <p className="mt-0.5 text-rose-300/80">{error}</p>
+              <span className="font-bold block text-sm">Connection Error</span>
+              <p className="mt-0.5">{error}</p>
               <button
                 onClick={() => fetchData(true)}
-                className="mt-2 text-xs font-semibold underline text-rose-200 hover:text-white flex items-center space-x-1 cursor-pointer"
+                className="mt-2 text-xs font-semibold underline hover:text-red-900 cursor-pointer"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Retry</span>
+                Retry Connection
               </button>
             </div>
           </div>
         )}
 
-        {/* KPI CARDS */}
-        <section className="fade-in-up">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 flex items-center space-x-1.5">
-              <Radio className="w-3 h-3 text-cyan-400" />
-              <span>Operational Risk & Precursor Metrics</span>
-            </h2>
-            <span className="text-[10px] text-slate-600 font-mono">
-              Live · PostgreSQL
-            </span>
-          </div>
-          <KpiCards analytics={analytics || {}} incidents={incidents} />
-        </section>
+        <KpiCards analytics={analytics || {}} incidents={incidents} />
 
-        {/* CHARTS */}
-        <section className="fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 flex items-center space-x-1.5">
-              <BarChart3 className="w-3 h-3 text-cyan-400" />
-              <span>Interactive Analytics</span>
-            </h2>
-            <span className="text-[10px] text-slate-600 font-mono">
-              Apache ECharts
-            </span>
+        {/* Charts in a dashed border block matching reference */}
+        <div className="border border-blue-400 border-dashed rounded-md p-4 bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 divide-x divide-gray-100">
+            <div className="pl-2">
+              <RiskLevelChart analytics={analytics || {}} />
+            </div>
+            <div className="pl-6">
+              <LifeSavingRulesChart analytics={analytics || {}} />
+            </div>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <RiskLevelChart analytics={analytics || {}} />
-            <LifeSavingRulesChart analytics={analytics || {}} />
-          </div>
-        </section>
+        </div>
 
         {/* INCIDENT TABLE */}
-        <section className="space-y-3 fade-in-up" style={{ animationDelay: '0.35s' }}>
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-bold text-white">
-                Real-Time HSSE Incident Feed
-              </h2>
-              <p className="text-xs text-slate-500">
-                AI risk reasoning · Life-saving rules · Corrective checklists
-              </p>
+        <div className="bg-white border border-gray-200 rounded-md p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+              RECENT COMMAND CENTER INCIDENT LOGS (AI & MANUAL DETECTION)
+            </h2>
+            <div className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-200">
+              REAL-TIME EVENT FEED
             </div>
           </div>
           <IncidentTable
@@ -133,21 +129,9 @@ export default function Dashboard() {
             loading={loading}
             onRefresh={() => fetchData(true)}
           />
-        </section>
+        </div>
 
       </main>
-
-      {/* FOOTER */}
-      <footer className="border-t border-white/[0.04] bg-[#151E2E]/50 py-4 mt-12 text-center">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span className="text-xs text-slate-600">
-            © {new Date().getFullYear()} Oil India Limited • HSSE Division
-          </span>
-          <span className="text-[10px] text-slate-700 font-mono">
-            AI Precursor Engine v1.0 · Gemini Enrichment
-          </span>
-        </div>
-      </footer>
 
       <Toast toast={toast} onClose={() => setToast(null)} />
     </div>

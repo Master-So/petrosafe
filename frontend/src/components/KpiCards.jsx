@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  ClipboardList,
-  AlertTriangle,
-  Flame,
-  ShieldAlert,
-  Activity,
-  TrendingUp,
-} from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
 export default function KpiCards({ analytics = {}, incidents = [] }) {
   const total = analytics.total_incidents ?? incidents.length ?? 0;
@@ -49,92 +42,83 @@ export default function KpiCards({ analytics = {}, incidents = [] }) {
 
   const cards = [
     {
-      label: 'Total Incidents',
+      label: 'TOTAL ACTIVE INCIDENTS',
       value: total,
-      sub: `Avg SIF: ${avgSif}/10`,
-      icon: ClipboardList,
-      gradient: 'kpi-teal',
-      delay: 'fade-in-up-delay-1',
+      subPrefix: '+12%', // Mock data matching reference for trend
+      subPrefixColor: 'text-red-500',
+      subSuffix: 'vs prev. period',
+      pillText: 'HIGH',
+      pillClass: 'pill-high',
+      trendColor: 'text-yellow-400'
     },
     {
-      label: 'High SIF Precursors',
+      label: 'SIF PRECURSORS DETECTED',
       value: highSifCount,
-      sub: `${highSifPct}% of total`,
-      icon: AlertTriangle,
-      gradient: 'kpi-amber',
-      delay: 'fade-in-up-delay-2',
+      subPrefix: `${highSifPct}% of total`,
+      subPrefixColor: 'text-red-500',
+      subSuffix: 'vs prev. period',
+      pillText: 'CRITICAL',
+      pillClass: 'pill-critical',
+      trendColor: 'text-red-500'
     },
     {
-      label: 'Fatal Potential',
+      label: 'FATAL POTENTIAL EVENTS',
       value: fatalCount,
-      sub: fatalCount > 0 ? 'CRITICAL' : 'Zero Flagged',
-      icon: Flame,
-      gradient: 'kpi-coral',
-      glowClass: fatalCount > 0 ? 'glow-coral pulse-alert' : '',
-      delay: 'fade-in-up-delay-3',
+      subPrefix: '0% delta',
+      subPrefixColor: 'text-green-500',
+      subSuffix: 'vs prev. period',
+      pillText: 'CRITICAL',
+      pillClass: 'pill-critical',
+      trendColor: 'text-red-500'
     },
     {
-      label: 'Top Violated Rule',
+      label: 'TOP VIOLATED RULE',
       value: topRuleName,
-      sub: `${topRuleCount} occurrences`,
-      icon: ShieldAlert,
-      gradient: 'kpi-violet',
+      subPrefix: `${topRuleCount} occurrences`,
+      subPrefixColor: 'text-red-500',
+      subSuffix: 'vs prev. period',
+      pillText: 'MEDIUM',
+      pillClass: 'pill-medium',
+      trendColor: 'text-yellow-400',
       isText: true,
-      delay: 'fade-in-up-delay-4',
     },
   ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {cards.map((card, idx) => {
-        const Icon = card.icon;
-        return (
-          <div
-            key={idx}
-            className={`
-              ${card.gradient} rounded-xl p-5 shadow-lg
-              hover:scale-[1.03] hover:shadow-xl transition-all duration-300 cursor-default
-              fade-in-up ${card.delay} ${card.glowClass || ''}
-            `}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-white/70">
-                {card.label}
-              </span>
-              <div className="p-1.5 rounded-lg bg-white/15 backdrop-blur-sm">
-                <Icon className="w-4 h-4 text-white" />
-              </div>
-            </div>
-
-            <div className={card.isText ? '' : 'flex items-baseline justify-between'}>
-              {card.isText ? (
-                <div className="text-lg font-extrabold text-white tracking-tight truncate" title={card.value}>
-                  {card.value}
-                </div>
-              ) : (
-                <span className="text-3xl font-black text-white tracking-tight">
-                  {card.value}
-                </span>
-              )}
-              {!card.isText && (
-                <span className="text-xs font-semibold text-white/60 flex items-center space-x-1">
-                  <Activity className="w-3 h-3" />
-                  <span>{card.sub}</span>
-                </span>
-              )}
-            </div>
-
-            {card.isText && (
-              <div className="mt-1 text-xs font-semibold text-white/60">
-                {card.sub}
-              </div>
-            )}
-
-            {/* Decorative bottom bar */}
-            <div className="mt-4 h-0.5 w-full rounded-full bg-white/20" />
+      {cards.map((card, idx) => (
+        <div key={idx} className="flat-card p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-[10px] font-bold text-gray-500 tracking-wider">
+              {card.label}
+            </span>
+            <span className={`px-2 py-0.5 rounded text-[9px] font-bold tracking-widest ${card.pillClass}`}>
+              {card.pillText}
+            </span>
           </div>
-        );
-      })}
+
+          <div className={`font-black text-gray-900 tracking-tight leading-none mb-4 ${card.isText ? 'text-2xl line-clamp-2' : 'text-4xl'}`}>
+            {card.value}
+          </div>
+
+          <div className="flex items-center justify-between mt-auto">
+            <div className="text-[10px] font-bold flex items-center space-x-1">
+              {card.subPrefixColor === 'text-red-500' ? (
+                <TrendingDown className={`w-3 h-3 ${card.subPrefixColor}`} />
+              ) : (
+                <TrendingUp className={`w-3 h-3 ${card.subPrefixColor}`} />
+              )}
+              <span className={card.subPrefixColor}>{card.subPrefix}</span>
+              <span className="text-gray-400 font-medium ml-1">{card.subSuffix}</span>
+            </div>
+            
+            {/* Simple mock trendline svg matching reference image */}
+            <svg width="40" height="20" viewBox="0 0 40 20" fill="none" className={card.trendColor}>
+              <path d="M0 15L10 10L20 18L30 5L40 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

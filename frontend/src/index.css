@@ -1,52 +1,39 @@
 @import "tailwindcss";
 
-/* ── Design Tokens ────────────────────────────────────────────── */
+/* ── Flat Structured Light Theme ────────────────────────────── */
 :root {
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Backgrounds */
-  --bg-deep: #0F1729;
-  --bg-card: #1A2332;
-  --bg-card-hover: #1E293B;
-  --bg-surface: #151E2E;
+  --bg-page: #F9FAFB;
+  --bg-card: #FFFFFF;
+  --bg-hover: #F3F4F6;
+  --bg-subtle: #F1F5F9;
 
   /* Borders */
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glass-hover: rgba(255, 255, 255, 0.14);
-
-  /* Accent Colors */
-  --accent-teal: #06B6D4;
-  --accent-teal-light: #22D3EE;
-  --accent-teal-glow: rgba(6, 182, 212, 0.15);
-  --accent-amber: #F59E0B;
-  --accent-amber-glow: rgba(245, 158, 11, 0.15);
-  --accent-coral: #F43F5E;
-  --accent-coral-glow: rgba(244, 63, 94, 0.15);
-  --accent-emerald: #10B981;
-  --accent-emerald-glow: rgba(16, 185, 129, 0.15);
-  --accent-violet: #8B5CF6;
-  --accent-violet-glow: rgba(139, 92, 246, 0.15);
+  --border-light: #E5E7EB;
+  --border-medium: #D1D5DB;
 
   /* Text */
-  --text-primary: #F1F5F9;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
+  --text-main: #111827;
+  --text-muted: #6B7280;
+  --text-light: #9CA3AF;
 
-  /* Gradients */
-  --gradient-teal: linear-gradient(135deg, #06B6D4, #14B8A6);
-  --gradient-amber: linear-gradient(135deg, #F59E0B, #FB923C);
-  --gradient-coral: linear-gradient(135deg, #F43F5E, #FB7185);
-  --gradient-violet: linear-gradient(135deg, #8B5CF6, #6366F1);
-  --gradient-header: linear-gradient(90deg, #06B6D4, #8B5CF6, #F43F5E, #F59E0B, #06B6D4);
+  /* Severity / Accent Colors */
+  --color-critical: #EF4444; /* Red */
+  --color-high: #F59E0B;     /* Orange/Amber */
+  --color-medium: #EAB308;   /* Yellow */
+  --color-low: #3B82F6;      /* Blue */
+  --color-negligible: #10B981; /* Green */
 }
 
 /* ── Base ─────────────────────────────────────────────────────── */
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-deep);
-  color: var(--text-primary);
+  background-color: var(--bg-page);
+  color: var(--text-main);
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -58,116 +45,98 @@ body {
   flex-direction: column;
 }
 
-/* ── Dark Scrollbars ──────────────────────────────────────────── */
+/* ── Scrollbars ─────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-deep);
+  background: var(--bg-page);
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #CBD5E1;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #94A3B8;
 }
 
-/* ── Glassmorphism Card ───────────────────────────────────────── */
-.glass-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-glass);
-  border-radius: 12px;
-  backdrop-filter: blur(12px);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-}
-.glass-card:hover {
-  border-color: var(--border-glass-hover);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-/* ── Animated Gradient Line ───────────────────────────────────── */
-.gradient-line {
-  height: 2px;
-  background: var(--gradient-header);
-  background-size: 200% 100%;
-  animation: gradientSlide 4s linear infinite;
-}
-@keyframes gradientSlide {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-/* ── Glow Effects ─────────────────────────────────────────────── */
-.glow-teal {
-  box-shadow: 0 0 16px var(--accent-teal-glow), 0 0 4px var(--accent-teal-glow);
-}
-.glow-coral {
-  box-shadow: 0 0 16px var(--accent-coral-glow), 0 0 4px var(--accent-coral-glow);
-}
-.glow-amber {
-  box-shadow: 0 0 16px var(--accent-amber-glow), 0 0 4px var(--accent-amber-glow);
-}
-.glow-emerald {
-  box-shadow: 0 0 16px var(--accent-emerald-glow), 0 0 4px var(--accent-emerald-glow);
-}
-
-/* ── Pulse Animations ─────────────────────────────────────────── */
-@keyframes softPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
-}
-.pulse-alert {
-  animation: softPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes dotPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.6); opacity: 0.5; }
-}
-.pulse-dot {
-  animation: dotPulse 2s ease-in-out infinite;
-}
-
-/* ── Fade-in Animation ────────────────────────────────────────── */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-.fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
-.fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
-.fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
-.fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
-
-/* ── KPI Gradient Cards ───────────────────────────────────────── */
-.kpi-teal { background: var(--gradient-teal); }
-.kpi-amber { background: var(--gradient-amber); }
-.kpi-coral { background: var(--gradient-coral); }
-.kpi-violet { background: var(--gradient-violet); }
-
-/* ── Focus Ring ───────────────────────────────────────────────── */
-.focus-ring-teal:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--bg-deep), 0 0 0 4px var(--accent-teal);
-}
-
-/* ── Dark Inputs ──────────────────────────────────────────────── */
-.input-dark {
-  background-color: var(--bg-card-hover);
-  border: 1px solid var(--border-glass);
-  color: var(--text-primary);
+/* ── Flat Card ────────────────────────────────────────────────── */
+.flat-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-light);
   border-radius: 8px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Very subtle shadow */
 }
-.input-dark:focus {
+
+/* ── Inputs ───────────────────────────────────────────────────── */
+.input-flat {
+  background-color: #FFFFFF;
+  border: 1px solid var(--border-medium);
+  color: var(--text-main);
+  border-radius: 6px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.input-flat:focus {
   outline: none;
-  border-color: var(--accent-teal);
-  box-shadow: 0 0 0 3px var(--accent-teal-glow);
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
-.input-dark::placeholder {
-  color: var(--text-muted);
+.input-flat::placeholder {
+  color: var(--text-light);
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+.btn-primary {
+  background-color: #111827;
+  color: #FFFFFF;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.15s ease;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #1F2937;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: #FFFFFF;
+  color: #374151;
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.15s ease;
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: #F3F4F6;
+}
+
+/* ── Severity Pills ───────────────────────────────────────────── */
+.pill-critical {
+  background-color: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+.pill-high {
+  background-color: #FFFBEB;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.pill-medium {
+  background-color: #FEFCE8;
+  color: #854D0E;
+  border: 1px solid #FEF08A;
+}
+.pill-low {
+  background-color: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid #BFDBFE;
+}
+.pill-negligible {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
 }

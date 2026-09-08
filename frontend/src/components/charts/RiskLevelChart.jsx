@@ -2,9 +2,18 @@ import React, { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 
 const RISK_COLORS = {
-  'SIF-HIGH': '#F43F5E',
-  'MEDIUM':   '#F59E0B',
-  'LOW':      '#10B981',
+  'CRITICAL': '#EF4444',
+  'SIF-HIGH': '#F59E0B',
+  'MEDIUM':   '#EAB308',
+  'LOW':      '#3B82F6',
+};
+
+// Map backend risk levels to UI risk levels for color matching
+const getRiskColor = (name) => {
+  if (name === 'SIF-HIGH') return RISK_COLORS['CRITICAL']; // Map SIF-HIGH to red in this UI
+  if (name === 'MEDIUM') return RISK_COLORS['MEDIUM'];
+  if (name === 'LOW') return RISK_COLORS['LOW'];
+  return '#9CA3AF'; // Default gray
 };
 
 export default function RiskLevelChart({ analytics = {} }) {
@@ -13,82 +22,76 @@ export default function RiskLevelChart({ analytics = {} }) {
     return Object.entries(byRisk).map(([name, value]) => ({
       name,
       value,
-      itemStyle: { color: RISK_COLORS[name] || '#64748B' },
+      itemStyle: { color: getRiskColor(name) },
     }));
   }, [analytics]);
 
+  const total = data.reduce((acc, curr) => acc + curr.value, 0);
   const hasData = data.length > 0 && data.some(d => d.value > 0);
 
   const option = useMemo(() => ({
     tooltip: {
       trigger: 'item',
-      backgroundColor: 'rgba(26, 35, 50, 0.95)',
-      borderColor: 'rgba(255,255,255,0.08)',
+      backgroundColor: '#FFFFFF',
+      borderColor: '#E2E8F0',
       borderWidth: 1,
-      textStyle: { color: '#F1F5F9', fontSize: 12, fontFamily: 'Inter, sans-serif' },
-      formatter: (params) =>
-        `<div style="font-weight:700;margin-bottom:4px;color:${params.color}">${params.name}</div>` +
-        `<span style="font-size:18px;font-weight:800;color:#F1F5F9">${params.value}</span>` +
-        ` <span style="opacity:0.5;color:#94A3B8">incidents (${params.percent}%)</span>`,
+      textStyle: { color: '#111827', fontSize: 12, fontFamily: 'Inter, sans-serif' },
     },
     legend: {
-      bottom: 0,
-      left: 'center',
-      itemWidth: 10,
-      itemHeight: 10,
-      itemGap: 20,
-      textStyle: { fontSize: 11, color: '#94A3B8', fontFamily: 'Inter, sans-serif' },
+      orient: 'vertical',
+      right: '10%',
+      top: 'middle',
+      itemWidth: 8,
+      itemHeight: 8,
+      icon: 'rect',
+      textStyle: { color: '#6B7280', fontSize: 11, fontFamily: 'Inter, sans-serif', fontWeight: 600 },
+      formatter: (name) => {
+        const item = data.find(d => d.name === name);
+        const count = item ? item.value : 0;
+        return `{name|${name}}  {count|${count} events}`;
+      },
+      textStyle: {
+        rich: {
+          name: { width: 60, color: '#6B7280', fontSize: 11, fontWeight: 600 },
+          count: { color: '#111827', fontSize: 11, fontWeight: 700 }
+        }
+      }
+    },
+    title: {
+      text: hasData ? `{val|${total}}\n{sub|TOTAL INCIDENTS}` : '{val|0}\n{sub|NO DATA}',
+      left: '29%',
+      top: 'center',
+      textAlign: 'center',
+      textStyle: {
+        rich: {
+          val: { fontSize: 28, fontWeight: 900, color: '#111827', lineHeight: 32 },
+          sub: { fontSize: 9, fontWeight: 700, color: '#9CA3AF' }
+        }
+      }
     },
     series: [
       {
         name: 'Risk Level',
         type: 'pie',
-        radius: ['46%', '76%'],
-        center: ['50%', '44%'],
-        avoidLabelOverlap: true,
-        padAngle: 4,
-        itemStyle: {
-          borderRadius: 8,
-          borderColor: '#1A2332',
-          borderWidth: 3,
-        },
-        label: {
-          show: true,
-          position: 'inside',
-          formatter: '{c}',
-          fontSize: 13,
-          fontWeight: 800,
-          color: '#fff',
-          fontFamily: 'Inter, sans-serif',
-          textShadowColor: 'rgba(0,0,0,0.4)',
-          textShadowBlur: 4,
-        },
-        emphasis: {
-          label: { show: true, fontSize: 16, fontWeight: 'bold' },
-          itemStyle: {
-            shadowBlur: 24,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.4)',
-          },
-        },
-        data: hasData ? data : [{ name: 'No Data', value: 1, itemStyle: { color: '#1E293B' } }],
-        animationType: 'scale',
-        animationEasing: 'elasticOut',
-        animationDelay: (idx) => idx * 150,
+        radius: ['60%', '85%'],
+        center: ['30%', '50%'],
+        avoidLabelOverlap: false,
+        label: { show: false },
+        labelLine: { show: false },
+        data: hasData ? data : [{ name: 'No Data', value: 1, itemStyle: { color: '#F3F4F6' } }],
       },
     ],
-  }), [data, hasData]);
+  }), [data, total, hasData]);
 
   return (
-    <div className="glass-card p-5">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-bold text-white">Risk Level Distribution</h3>
-        <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">SIF / MEDIUM / LOW</span>
+    <div className="h-full">
+      <div className="mb-2">
+        <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Risk Level Distribution</h3>
       </div>
       <ReactECharts
         option={option}
-        style={{ height: 280 }}
-        opts={{ renderer: 'canvas' }}
+        style={{ height: 200, width: '100%' }}
+        opts={{ renderer: 'svg' }}
         notMerge={true}
       />
     </div>
