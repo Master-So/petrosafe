@@ -68,6 +68,14 @@ LIFE_SAVING_RULES = Literal[
 class GeminiEnrichmentResponse(BaseModel):
     """Schema enforced on Gemini's structured JSON output."""
 
+    summary: str = Field(
+        ...,
+        description="A concise executive summary of the incident (intel details)."
+    )
+    risk_level: str = Field(
+        ...,
+        description="Risk classification: SIF-HIGH | MEDIUM | LOW",
+    )
     sif_precursor_density_score: int = Field(
         ...,
         ge=1,
@@ -110,6 +118,8 @@ class GeminiEnrichmentResponse(BaseModel):
 
 # ── Default fallback when Gemini is unavailable ─────────────────────────────
 GEMINI_FALLBACK = GeminiEnrichmentResponse(
+    summary="Gemini enrichment unavailable. Please check API key.",
+    risk_level="MEDIUM",
     sif_precursor_density_score=1,
     life_saving_rule="None",
     fatal_potential_flag=False,

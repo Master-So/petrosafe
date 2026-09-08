@@ -1,17 +1,52 @@
 @import "tailwindcss";
 
+/* ── Design Tokens ────────────────────────────────────────────── */
 :root {
+  /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --oil-navy: #0B4F6C;
-  --oil-navy-hover: #093f56;
-  --oil-gold: #D97706;
+
+  /* Backgrounds */
+  --bg-deep: #0F1729;
+  --bg-card: #1A2332;
+  --bg-card-hover: #1E293B;
+  --bg-surface: #151E2E;
+
+  /* Borders */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-hover: rgba(255, 255, 255, 0.14);
+
+  /* Accent Colors */
+  --accent-teal: #06B6D4;
+  --accent-teal-light: #22D3EE;
+  --accent-teal-glow: rgba(6, 182, 212, 0.15);
+  --accent-amber: #F59E0B;
+  --accent-amber-glow: rgba(245, 158, 11, 0.15);
+  --accent-coral: #F43F5E;
+  --accent-coral-glow: rgba(244, 63, 94, 0.15);
+  --accent-emerald: #10B981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.15);
+  --accent-violet: #8B5CF6;
+  --accent-violet-glow: rgba(139, 92, 246, 0.15);
+
+  /* Text */
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Gradients */
+  --gradient-teal: linear-gradient(135deg, #06B6D4, #14B8A6);
+  --gradient-amber: linear-gradient(135deg, #F59E0B, #FB923C);
+  --gradient-coral: linear-gradient(135deg, #F43F5E, #FB7185);
+  --gradient-violet: linear-gradient(135deg, #8B5CF6, #6366F1);
+  --gradient-header: linear-gradient(90deg, #06B6D4, #8B5CF6, #F43F5E, #F59E0B, #06B6D4);
 }
 
+/* ── Base ─────────────────────────────────────────────────────── */
 body {
   font-family: var(--font-sans);
-  background-color: #F8FAFC;
-  color: #0F172A;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -23,28 +58,116 @@ body {
   flex-direction: column;
 }
 
-/* Custom scrollbars for clean enterprise look */
+/* ── Dark Scrollbars ──────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: var(--bg-deep);
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #334155;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #475569;
 }
 
-/* Subtle pulse for critical alerts */
+/* ── Glassmorphism Card ───────────────────────────────────────── */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.glass-card:hover {
+  border-color: var(--border-glass-hover);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Animated Gradient Line ───────────────────────────────────── */
+.gradient-line {
+  height: 2px;
+  background: var(--gradient-header);
+  background-size: 200% 100%;
+  animation: gradientSlide 4s linear infinite;
+}
+@keyframes gradientSlide {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ── Glow Effects ─────────────────────────────────────────────── */
+.glow-teal {
+  box-shadow: 0 0 16px var(--accent-teal-glow), 0 0 4px var(--accent-teal-glow);
+}
+.glow-coral {
+  box-shadow: 0 0 16px var(--accent-coral-glow), 0 0 4px var(--accent-coral-glow);
+}
+.glow-amber {
+  box-shadow: 0 0 16px var(--accent-amber-glow), 0 0 4px var(--accent-amber-glow);
+}
+.glow-emerald {
+  box-shadow: 0 0 16px var(--accent-emerald-glow), 0 0 4px var(--accent-emerald-glow);
+}
+
+/* ── Pulse Animations ─────────────────────────────────────────── */
 @keyframes softPulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.65; }
+  50% { opacity: 0.55; }
 }
-
 .pulse-alert {
   animation: softPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.5; }
+}
+.pulse-dot {
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+/* ── Fade-in Animation ────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+.fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* ── KPI Gradient Cards ───────────────────────────────────────── */
+.kpi-teal { background: var(--gradient-teal); }
+.kpi-amber { background: var(--gradient-amber); }
+.kpi-coral { background: var(--gradient-coral); }
+.kpi-violet { background: var(--gradient-violet); }
+
+/* ── Focus Ring ───────────────────────────────────────────────── */
+.focus-ring-teal:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-deep), 0 0 0 4px var(--accent-teal);
+}
+
+/* ── Dark Inputs ──────────────────────────────────────────────── */
+.input-dark {
+  background-color: var(--bg-card-hover);
+  border: 1px solid var(--border-glass);
+  color: var(--text-primary);
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.input-dark:focus {
+  outline: none;
+  border-color: var(--accent-teal);
+  box-shadow: 0 0 0 3px var(--accent-teal-glow);
+}
+.input-dark::placeholder {
+  color: var(--text-muted);
 }

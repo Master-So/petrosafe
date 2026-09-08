@@ -52,9 +52,10 @@ risk intelligence.
 
 You will receive:
 1. The raw incident report fields (date, location, short_cause, description).
-2. Outputs from a local AI triage model (local_summary, local_risk_level).
 
 Your task:
+- Write a concise executive summary of the incident (intel details).
+- Assess the risk level as one of: SIF-HIGH, MEDIUM, LOW.
 - Evaluate the SIF precursor density on a 1-10 scale based on the energy \
   sources, control barriers, and human factors described.
 - Map the incident to the single most applicable IOGP Life-Saving Rule from \
@@ -80,9 +81,6 @@ def _build_user_prompt(
         f"Location: {report_data['location']}\n"
         f"Short Cause: {report_data['short_cause']}\n"
         f"Description: {report_data['description']}\n\n"
-        f"=== LOCAL MODEL OUTPUT ===\n"
-        f"Local Summary: {local_summary}\n"
-        f"Local Risk Level: {local_risk}\n\n"
         f"Analyse this incident and return structured enrichment."
     )
 

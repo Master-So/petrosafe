@@ -1,152 +1,176 @@
 import React from 'react';
-import { 
-  ShieldAlert, 
-  Plus, 
-  RefreshCw, 
-  Server, 
-  Cpu, 
-  Database, 
-  Activity,
-  CheckCircle2,
-  AlertCircle
+import { Link, useLocation } from 'react-router-dom';
+import {
+  ShieldAlert,
+  Plus,
+  RefreshCw,
+  Server,
+  Cpu,
+  Database,
+  LayoutDashboard,
+  BarChart3,
+  FileText,
 } from 'lucide-react';
 
-export default function Header({ 
-  systemStatus, 
-  onRefresh, 
-  isRefreshing, 
-  onOpenReportModal,
-  lastUpdated 
+export default function Header({
+  systemStatus,
+  onRefresh,
+  isRefreshing,
+  lastUpdated
 }) {
+  const location = useLocation();
   const isBackendUp = systemStatus.backend === 'ok';
   const isAiUp = systemStatus.ai === 'ok';
   const isDbUp = systemStatus.db === 'ok';
 
+  const navItems = [
+    { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/report/new', label: 'New Report', icon: FileText },
+  ];
+
   return (
-    <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
-      {/* Top corporate bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          
-          {/* Brand & Emblem */}
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-lg bg-[#0B4F6C] flex items-center justify-center shadow-sm text-white flex-shrink-0">
-              {/* Industrial safety flame/oil droplet logo */}
-              <svg 
-                className="w-7 h-7" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              >
-                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-              </svg>
-            </div>
+    <header className="sticky top-0 z-30">
+      {/* Main header bar */}
+      <div className="bg-[#151E2E]/90 backdrop-blur-md border-b border-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
 
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-xs tracking-wider uppercase text-[#0B4F6C] bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
-                  Oil India Limited
-                </span>
-                <span className="text-xs text-slate-400 font-medium">HSSE Division</span>
+            {/* Brand */}
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <svg
+                  className="w-5 h-5 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                </svg>
               </div>
-              <h1 className="text-lg sm:text-xl font-bold text-[#0F172A] tracking-tight leading-snug">
-                HSSE Incident Intelligence & SIF Precursor Command Center
-              </h1>
-              <p className="text-xs text-slate-500 hidden sm:block">
-                Real-time field safety surveillance • Automated AI precursor scoring • Life-Saving Rules compliance
-              </p>
+              <div>
+                <h1 className="text-sm font-bold text-white tracking-tight leading-none">
+                  PetroSafe <span className="text-cyan-400">HSSE</span>
+                </h1>
+                <p className="text-[10px] text-slate-500 font-medium tracking-wide">
+                  AI Command Center
+                </p>
+              </div>
+            </div>
+
+            {/* Center Navigation */}
+            <nav className="hidden sm:flex items-center space-x-1">
+              {navItems.map(({ to, label, icon: Icon }) => {
+                const isActive = location.pathname === to;
+                return (
+                  <Link
+                    key={to}
+                    to={to}
+                    className={`
+                      flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200
+                      ${isActive
+                        ? 'bg-cyan-500/10 text-cyan-400 shadow-sm shadow-cyan-500/10'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
+                      }
+                    `}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Right Actions */}
+            <div className="flex items-center space-x-2">
+              {/* Refresh */}
+              <button
+                onClick={onRefresh}
+                disabled={isRefreshing}
+                title="Refresh dashboard data"
+                className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-white/[0.04] rounded-lg transition-all border border-white/[0.06] disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-cyan-400' : ''}`} />
+              </button>
+
+              {/* New Report CTA */}
+              <Link
+                id="btn-report-incident"
+                to="/report/new"
+                className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold text-xs text-white bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30"
+              >
+                <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
+                <span>New Report</span>
+              </Link>
             </div>
           </div>
-
-          {/* Right Action & Status Area */}
-          <div className="flex items-center space-x-3">
-            
-            {/* Refresh button */}
-            <button
-              onClick={onRefresh}
-              disabled={isRefreshing}
-              title="Refresh dashboard data"
-              className="p-2 text-slate-500 hover:text-[#0F172A] hover:bg-slate-100 rounded-md transition-colors border border-slate-200 text-sm flex items-center space-x-1 disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#0B4F6C]' : ''}`} />
-              <span className="hidden md:inline text-xs font-medium text-slate-600">
-                {isRefreshing ? 'Syncing...' : 'Sync'}
-              </span>
-            </button>
-
-            {/* Primary CTA: Report New Incident */}
-            <button
-              id="btn-report-incident"
-              onClick={onOpenReportModal}
-              className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md font-semibold text-sm text-white bg-[#0B4F6C] hover:bg-[#093f56] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F6C]/40 cursor-pointer"
-            >
-              <Plus className="w-4 h-4" strokeWidth={2.5} />
-              <span>Report New Incident</span>
-            </button>
-          </div>
-
         </div>
+      </div>
 
-        {/* Sub-header System Telemetry Bar */}
-        <div className="py-2 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
-          
+      {/* Animated gradient line */}
+      <div className="gradient-line" />
+
+      {/* Telemetry bar */}
+      <div className="bg-[#0F1729]/80 backdrop-blur-sm border-b border-white/[0.04]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between text-[11px] gap-2">
+
           {/* Status indicators */}
           <div className="flex items-center space-x-4">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              System Telemetry:
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+              Telemetry
             </span>
 
-            {/* FastAPI Microservice */}
-            <div className="flex items-center space-x-1.5" title="Local Classifier + Gemini Enrichment (Port 8000)">
-              <Cpu className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-medium text-slate-700">FastAPI AI (:8000):</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium border ${
-                isAiUp 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                  : 'bg-amber-50 text-amber-700 border-amber-200'
+            {/* FastAPI */}
+            <div className="flex items-center space-x-1.5" title="FastAPI AI (Port 8000)">
+              <Cpu className="w-3 h-3 text-slate-500" />
+              <span className="font-medium text-slate-400">AI</span>
+              <span className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                isAiUp
+                  ? 'text-emerald-400 bg-emerald-500/10'
+                  : 'text-amber-400 bg-amber-500/10'
               }`}>
-                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${isAiUp ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-                {isAiUp ? 'Connected' : 'Offline'}
+                <span className={`w-1.5 h-1.5 rounded-full ${isAiUp ? 'bg-emerald-400 pulse-dot' : 'bg-amber-400'}`} />
+                <span>{isAiUp ? 'OK' : 'OFF'}</span>
               </span>
             </div>
 
-            {/* Express Server */}
-            <div className="flex items-center space-x-1.5" title="Node Express API Server (Port 4000)">
-              <Server className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-medium text-slate-700">Express API (:4000):</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium border ${
-                isBackendUp 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                  : 'bg-red-50 text-red-700 border-red-200'
+            {/* Express */}
+            <div className="flex items-center space-x-1.5" title="Express API (Port 4000)">
+              <Server className="w-3 h-3 text-slate-500" />
+              <span className="font-medium text-slate-400">API</span>
+              <span className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                isBackendUp
+                  ? 'text-emerald-400 bg-emerald-500/10'
+                  : 'text-rose-400 bg-rose-500/10'
               }`}>
-                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${isBackendUp ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                {isBackendUp ? 'Connected' : 'Down'}
+                <span className={`w-1.5 h-1.5 rounded-full ${isBackendUp ? 'bg-emerald-400 pulse-dot' : 'bg-rose-400 pulse-alert'}`} />
+                <span>{isBackendUp ? 'OK' : 'DOWN'}</span>
               </span>
             </div>
 
-            {/* PostgreSQL DB */}
-            <div className="flex items-center space-x-1.5" title="PostgreSQL Schema: petrosafe (Port 5432)">
-              <Database className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-medium text-slate-700">PostgreSQL (:5432):</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium border ${
-                isDbUp 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                  : 'bg-red-50 text-red-700 border-red-200'
+            {/* PostgreSQL */}
+            <div className="flex items-center space-x-1.5" title="PostgreSQL (Port 5432)">
+              <Database className="w-3 h-3 text-slate-500" />
+              <span className="font-medium text-slate-400">DB</span>
+              <span className={`inline-flex items-center space-x-1 px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                isDbUp
+                  ? 'text-emerald-400 bg-emerald-500/10'
+                  : 'text-rose-400 bg-rose-500/10'
               }`}>
-                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${isDbUp ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                {isDbUp ? 'Active' : 'Disconnected'}
+                <span className={`w-1.5 h-1.5 rounded-full ${isDbUp ? 'bg-emerald-400 pulse-dot' : 'bg-rose-400'}`} />
+                <span>{isDbUp ? 'OK' : 'DOWN'}</span>
               </span>
             </div>
           </div>
 
           {/* Timestamp */}
-          <div className="text-[11px] text-slate-400">
-            {lastUpdated ? `Last Telemetry Sync: ${new Date(lastUpdated).toLocaleTimeString()}` : 'Initializing...'}
+          <div className="text-[10px] text-slate-600 font-mono">
+            {lastUpdated
+              ? `Sync: ${new Date(lastUpdated).toLocaleTimeString()}`
+              : 'Initializing…'}
           </div>
-
         </div>
       </div>
     </header>
