@@ -1,0 +1,41 @@
+// prisma/schema.prisma
+// ─────────────────────────────────────────────────────────────────────────────
+// PetroSafe HSSE Incident Management — Database Schema
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// A single HSSE incident report enriched by the local AI + Gemini pipeline.
+model Incident {
+  // ── Primary Key ────────────────────────────────────────────────────────────
+  id String @id @default(uuid()) @db.Uuid
+
+  // ── Raw incident fields (submitted by reporter) ───────────────────────────
+  date       DateTime @db.Date
+  location   String   @db.VarChar(255)
+  short_cause String  @db.VarChar(255)
+  description String  @db.Text
+
+  // ── Local AI model outputs ────────────────────────────────────────────────
+  local_summary    String @db.Text
+  local_risk_level String @db.VarChar(20) // SIF-HIGH | MEDIUM | LOW
+
+  // ── Gemini enrichment fields ──────────────────────────────────────────────
+  sif_precursor_density_score Int     @db.SmallInt // 1–10
+  life_saving_rule            String  @db.VarChar(100)
+  fatal_potential_flag        Boolean
+  risk_reasoning              String  @db.Text
+  corrective_actions          Json    // stored as JSONB — string[]
+
+  // ── Audit ─────────────────────────────────────────────────────────────────
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("incidents")
+}

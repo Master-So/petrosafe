@@ -1,0 +1,12 @@
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.7.0
+python-dotenv>=1.0.0
+
+# Gemini GenAI SDK
+google-genai>=1.0.0
+
+# Model dependencies (from AIModels/safety_platform/requirements_standalone.txt)
+torch>=2.2.0
+transformers>=4.38.2
+numpy>=1.26.4

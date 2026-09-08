@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "files": {
+    "standalone_inference.py": "a0bdf259fb992ed2725c9d90e7ad2e552316dee07340ecc3bbfb92afe0d61d58",
+    "engine.py": "13b7e2f9342b46fbb2237881ca6bb56f2c4254cc83d677b3ca61308db9f798e7",
+    "test_models.py": "a8149153d8a83a28a10d3a04b9cb1ce5e7505f2f1531de49cd4e3dd60c6bda1a",
+    "expected_results.json": "0228671c9885d33772f12af1fb95937014c2f0a0028723470a1b3edb854eb26a",
+    "requirements_standalone.txt": "416cee288a1f402347fbb01be239088c080b839ea06efabbb36c58c63369826d",
+    "verify_bundle.py": "808299cb153a67859d544c77a75129a1c72a2d78cbe33064aee544b3a28666ff",
+    "README_MODEL.md": "bd189ac7e99be3290f8ecb39ff28d7d839888c0d9950c2a960e52cae69df8c4e"
+  }
+}

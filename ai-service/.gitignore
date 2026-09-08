@@ -1,0 +1,51 @@
+# ── Environment & Secrets (NEVER commit these) ────────────────────────────────
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Node.js ───────────────────────────────────────────────────────────────────
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# ── Prisma ────────────────────────────────────────────────────────────────────
+# Keep migrations and schema; ignore generated client (auto-generated on install)
+# node_modules/@prisma is already covered above
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.iml

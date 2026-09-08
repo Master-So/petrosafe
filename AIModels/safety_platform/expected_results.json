@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "tolerance": 0.0002,
+  "test_cases": [
+    {
+      "id": "SYN_01_ARC_FLASH",
+      "name": "Electrical Arc Flash",
+      "narrative": "Technician opened a 440V 400A electric panel to energize jumbo equipment without verifying lockout tagout. Contact caused a phase-to-ground flash resulting in severe second degree burns to face and arms.",
+      "category": "Electrical installation",
+      "location": "Local_01 (Mining)",
+      "perceived_severity": 1,
+      "expected_severity_range": [4, 5],
+      "expected_sif": true,
+      "expected_under_reported": true
+    },
+    {
+      "id": "SYN_02_PRESSURIZED_BREACH",
+      "name": "High-Pressure Chemical Line Uncoupling",
+      "narrative": "During activation of a sodium sulphide pump, the discharge piping was uncoupled without depressurisation, spraying hazardous chemical solution into the work area and eyes of the operator.",
+      "category": "Pressurized Systems",
+      "location": "Local_02 (Mining)",
+      "perceived_severity": 1,
+      "expected_severity_range": [3, 4],
+      "expected_sif": true,
+      "expected_under_reported": true
+    },
+    {
+      "id": "SYN_03_SCAFFOLD_FALL",
+      "name": "Scaffolding Elevated Fall Hazard",
+      "narrative": "Contractor climbed onto elevated structural scaffolding platform at 4.5m height to adjust cable tray without clipping harness lanyard to the anchor line. Worker slipped and fell, fracturing wrist.",
+      "category": "Fall from height",
+      "location": "Local_05 (Metals)",
+      "perceived_severity": 2,
+      "expected_severity_range": [3, 4],
+      "expected_sif": true,
+      "expected_under_reported": true
+    },
+    {
+      "id": "SYN_04_MINOR_CONTUSION",
+      "name": "Manual Tool Minor Contusion",
+      "narrative": "While tightening a flange with a hand wrench, the tool slipped off the bolt head and bumped the operator's gloved knuckles, causing a minor superficial scratch. First aid applied on site.",
+      "category": "Manual Tools",
+      "location": "Local_03 (Mining)",
+      "perceived_severity": 1,
+      "expected_severity_range": [1, 2],
+      "expected_sif": false,
+      "expected_under_reported": false
+    }
+  ]
+}
