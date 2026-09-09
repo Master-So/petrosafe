@@ -1,3 +1,8 @@
-torch>=2.2.0
-transformers>=4.38.2
+fastapi>=0.111.0
+uvicorn[standard]>=0.27.0
+torch>=2.3.0
+transformers>=4.42.4
+huggingface_hub>=0.23.2
 numpy>=1.26.4
+pillow>=10.0.0
+requests>=2.31.0

@@ -1,154 +1,107 @@
 import React from 'react';
-import { 
-  ShieldAlert, 
-  Plus, 
-  RefreshCw, 
-  Server, 
-  Cpu, 
-  Database, 
-  Activity,
-  CheckCircle2,
-  AlertCircle
-} from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Shield, User, Bell } from 'lucide-react';
 
-export default function Header({ 
-  systemStatus, 
-  onRefresh, 
-  isRefreshing, 
-  onOpenReportModal,
-  lastUpdated 
+export default function Header({
+  systemStatus,
+  lastUpdated
 }) {
+  const location = useLocation();
   const isBackendUp = systemStatus.backend === 'ok';
   const isAiUp = systemStatus.ai === 'ok';
   const isDbUp = systemStatus.db === 'ok';
 
+  const navItems = [
+    { to: '/', label: 'Dashboard' },
+    { to: '/report/new', label: 'Reports' },
+    { to: '#', label: 'Analytics' },
+    { to: '#', label: 'Settings' },
+  ];
+
+  const getRelativeTime = (isoString) => {
+    if (!isoString) return 'WAITING...';
+    const diffInSeconds = Math.floor((new Date() - new Date(isoString)) / 1000);
+    if (diffInSeconds < 60) return `${diffInSeconds} SEC AGO`;
+    return `${Math.floor(diffInSeconds / 60)} MIN AGO`;
+  };
+
   return (
-    <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
-      {/* Top corporate bar */}
+    <header className="bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex justify-between h-16">
           
-          {/* Brand & Emblem */}
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-lg bg-[#0B4F6C] flex items-center justify-center shadow-sm text-white flex-shrink-0">
-              {/* Industrial safety flame/oil droplet logo */}
-              <svg 
-                className="w-7 h-7" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              >
-                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-              </svg>
-            </div>
-
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-xs tracking-wider uppercase text-[#0B4F6C] bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
-                  Oil India Limited
-                </span>
-                <span className="text-xs text-slate-400 font-medium">HSSE Division</span>
-              </div>
-              <h1 className="text-lg sm:text-xl font-bold text-[#0F172A] tracking-tight leading-snug">
-                HSSE Incident Intelligence & SIF Precursor Command Center
-              </h1>
-              <p className="text-xs text-slate-500 hidden sm:block">
-                Real-time field safety surveillance • Automated AI precursor scoring • Life-Saving Rules compliance
-              </p>
-            </div>
-          </div>
-
-          {/* Right Action & Status Area */}
+          {/* Logo */}
           <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded bg-red-500 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex flex-col justify-center">
+              <span className="text-sm font-black text-gray-900 tracking-tight leading-none uppercase">PETROSAFE</span>
+              <span className="text-[9px] font-bold text-red-500 tracking-widest uppercase">AI COMMAND CENTER</span>
+            </div>
+          </div>
+
+          {/* Center Navigation */}
+          <nav className="hidden sm:flex items-center space-x-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`px-4 py-1.5 rounded text-sm font-semibold transition-colors ${
+                  location.pathname === item.to || (item.to !== '/' && location.pathname.startsWith(item.to))
+                    ? 'bg-gray-100 text-gray-900'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Right Section (Telemetry & Profile) */}
+          <div className="flex items-center space-x-6">
             
-            {/* Refresh button */}
-            <button
-              onClick={onRefresh}
-              disabled={isRefreshing}
-              title="Refresh dashboard data"
-              className="p-2 text-slate-500 hover:text-[#0F172A] hover:bg-slate-100 rounded-md transition-colors border border-slate-200 text-sm flex items-center space-x-1 disabled:opacity-50"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#0B4F6C]' : ''}`} />
-              <span className="hidden md:inline text-xs font-medium text-slate-600">
-                {isRefreshing ? 'Syncing...' : 'Sync'}
-              </span>
-            </button>
-
-            {/* Primary CTA: Report New Incident */}
-            <button
-              id="btn-report-incident"
-              onClick={onOpenReportModal}
-              className="inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md font-semibold text-sm text-white bg-[#0B4F6C] hover:bg-[#093f56] transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0B4F6C]/40 cursor-pointer"
-            >
-              <Plus className="w-4 h-4" strokeWidth={2.5} />
-              <span>Report New Incident</span>
-            </button>
-          </div>
-
-        </div>
-
-        {/* Sub-header System Telemetry Bar */}
-        <div className="py-2 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
-          
-          {/* Status indicators */}
-          <div className="flex items-center space-x-4">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              System Telemetry:
-            </span>
-
-            {/* FastAPI Microservice */}
-            <div className="flex items-center space-x-1.5" title="Local Classifier + Gemini Enrichment (Port 8000)">
-              <Cpu className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-medium text-slate-700">FastAPI AI (:8000):</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium border ${
-                isAiUp 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                  : 'bg-amber-50 text-amber-700 border-amber-200'
-              }`}>
-                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${isAiUp ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-                {isAiUp ? 'Connected' : 'Offline'}
-              </span>
+            <div className="flex items-center text-[10px] font-bold text-gray-400 space-x-1.5 uppercase">
+              <RefreshIcon className="w-3 h-3" />
+              <span>SYNCED: {getRelativeTime(lastUpdated)}</span>
             </div>
 
-            {/* Express Server */}
-            <div className="flex items-center space-x-1.5" title="Node Express API Server (Port 4000)">
-              <Server className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-medium text-slate-700">Express API (:4000):</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium border ${
-                isBackendUp 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                  : 'bg-red-50 text-red-700 border-red-200'
-              }`}>
-                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${isBackendUp ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                {isBackendUp ? 'Connected' : 'Down'}
-              </span>
+            <div className="flex items-center space-x-3 text-[9px] font-bold uppercase tracking-wider">
+              <TelemetryStatus label="AI ENGINE" isUp={isAiUp} />
+              <TelemetryStatus label="INGEST API" isUp={isBackendUp} />
+              <TelemetryStatus label="DATABASE" isUp={isDbUp} />
             </div>
 
-            {/* PostgreSQL DB */}
-            <div className="flex items-center space-x-1.5" title="PostgreSQL Schema: petrosafe (Port 5432)">
-              <Database className="w-3.5 h-3.5 text-slate-400" />
-              <span className="font-medium text-slate-700">PostgreSQL (:5432):</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-medium border ${
-                isDbUp 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                  : 'bg-red-50 text-red-700 border-red-200'
-              }`}>
-                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${isDbUp ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                {isDbUp ? 'Active' : 'Disconnected'}
-              </span>
+            <div className="flex items-center space-x-3">
+              <button className="text-gray-400 hover:text-gray-600">
+                <Bell className="w-5 h-5" />
+              </button>
+              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                <User className="w-5 h-5" />
+              </div>
             </div>
-          </div>
 
-          {/* Timestamp */}
-          <div className="text-[11px] text-slate-400">
-            {lastUpdated ? `Last Telemetry Sync: ${new Date(lastUpdated).toLocaleTimeString()}` : 'Initializing...'}
           </div>
-
         </div>
       </div>
     </header>
+  );
+}
+
+function TelemetryStatus({ label, isUp }) {
+  return (
+    <div className="flex items-center space-x-1">
+      <div className={`w-1.5 h-1.5 rounded-full ${isUp ? 'bg-green-500' : 'bg-red-500'}`} />
+      <span className="text-gray-500">{label}</span>
+      <span className={isUp ? 'text-green-500' : 'text-red-500'}>{isUp ? 'OK' : 'ERR'}</span>
+    </div>
+  );
+}
+
+function RefreshIcon({ className }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    </svg>
   );
 }

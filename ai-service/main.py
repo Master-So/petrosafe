@@ -35,15 +35,16 @@ logger = logging.getLogger("ai_service.main")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Eagerly initialise the pipeline so the first request isn't slow."""
-    logger.info("🔧  Warming up SafetyInferencePipeline …")
-    try:
-        pipeline = get_pipeline()
-        logger.info(
-            "✅  Pipeline ready  (resolution_mode=%s)", pipeline.resolution_mode
-        )
-    except Exception as exc:
-        logger.critical("❌  Pipeline failed to load: %s", exc, exc_info=True)
-        raise  # Fail fast — don't start a broken server
+    # logger.info("🔧  Warming up SafetyInferencePipeline …")
+    # try:
+    #     pipeline = get_pipeline()
+    #     logger.info(
+    #         "✅  Pipeline ready  (resolution_mode=%s)", pipeline.resolution_mode
+    #     )
+    # except Exception as exc:
+    #     logger.critical("❌  Pipeline failed to load: %s", exc, exc_info=True)
+    #     raise  # Fail fast — don't start a broken server
+    logger.info("🔧  Bypassing SafetyInferencePipeline warmup (using Gemini only).")
     yield
 
 
@@ -103,7 +104,11 @@ async def analyze_local(payload: ReportRequest) -> AnalyzeResponse:
     executive summary.
     """
     try:
-        _, summary, risk_level = _run_local_inference(payload)
+        # _, summary, risk_level = _run_local_inference(payload)
+        report_data = payload.model_dump()
+        enrichment = await enrich_with_gemini(report_data, "", "")
+        summary = enrichment.summary
+        risk_level = enrichment.risk_level
     except RuntimeError as exc:
         logger.error("Pipeline unavailable: %s", exc)
         raise HTTPException(
@@ -142,24 +147,24 @@ async def process_report(payload: ReportRequest) -> ProcessReportResponse:
     safe default enrichment fields.
     """
     # ── Step 1: Local models ─────────────────────────────────────────────────
-    try:
-        _, local_summary, local_risk = _run_local_inference(payload)
-    except RuntimeError as exc:
-        logger.error("Pipeline unavailable: %s", exc)
-        raise HTTPException(
-            status_code=503,
-            detail="AI models are not available. Check server logs for details.",
-        ) from exc
-    except Exception as exc:
-        logger.exception("Local inference failed: %s", exc)
-        raise HTTPException(
-            status_code=500,
-            detail=f"Local model inference error: {exc}",
-        ) from exc
+    # try:
+    #     _, local_summary, local_risk = _run_local_inference(payload)
+    # except RuntimeError as exc:
+    #     logger.error("Pipeline unavailable: %s", exc)
+    #     raise HTTPException(
+    #         status_code=503,
+    #         detail="AI models are not available. Check server logs for details.",
+    #     ) from exc
+    # except Exception as exc:
+    #     logger.exception("Local inference failed: %s", exc)
+    #     raise HTTPException(
+    #         status_code=500,
+    #         detail=f"Local model inference error: {exc}",
+    #     ) from exc
 
     # ── Step 2: Gemini enrichment (non-blocking, graceful fallback) ──────────
     report_data = payload.model_dump()
-    enrichment = await enrich_with_gemini(report_data, local_summary, local_risk)
+    enrichment = await enrich_with_gemini(report_data, "", "")
 
     # ── Step 3: Unified response ─────────────────────────────────────────────
     return ProcessReportResponse(
@@ -167,8 +172,8 @@ async def process_report(payload: ReportRequest) -> ProcessReportResponse:
         location=payload.location,
         short_cause=payload.short_cause,
         description=payload.description,
-        local_summary=local_summary,
-        local_risk_level=local_risk,
+        local_summary=enrichment.summary,
+        local_risk_level=enrichment.risk_level,
         sif_precursor_density_score=enrichment.sif_precursor_density_score,
         life_saving_rule=enrichment.life_saving_rule,
         fatal_potential_flag=enrichment.fatal_potential_flag,
