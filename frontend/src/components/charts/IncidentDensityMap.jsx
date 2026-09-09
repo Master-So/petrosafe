@@ -4,11 +4,11 @@ import ReactECharts from 'echarts-for-react';
 // Hardcoded reference coordinates (Longitude, Latitude) for the schematic spatial layout.
 // This structure is reusable: backend can easily replace these fields.
 const LOCATION_COORDINATES = {
-  "Jorhat Compressor Terminal": [94.22, 26.75],
-  "Moran Gathering Station": [94.93, 27.18],
-  "Naharkatiya Production Well #22": [95.33, 27.28],
-  "Duliajan Rig #7": [95.33, 27.36],
-  "Digboi Rig #4": [95.63, 27.38],
+  "Jorhat Compressor Terminal": [94.20, 26.75],
+  "Moran Gathering Station": [94.90, 27.15],
+  "Naharkatiya Production Well #22": [95.20, 27.25], // Shifted West/South slightly for visual separation
+  "Duliajan Rig #7": [95.45, 27.40],               // Shifted East/North slightly for visual separation
+  "Digboi Rig #4": [95.70, 27.45],
 };
 
 export default function IncidentDensityMap({ incidents = [] }) {
