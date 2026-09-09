@@ -111,6 +111,7 @@ async function getAnalytics(req, res) {
     avgScoreResult,
     byRiskLevel,
     byLifeSavingRule,
+    byLocation,
   ] = await Promise.all([
     // 1. Total count
     prisma.incident.count(),
@@ -138,6 +139,13 @@ async function getAnalytics(req, res) {
       _count: { id: true },
       orderBy: { _count: { id: "desc" } },
     }),
+
+    // 6. Group by location
+    prisma.incident.groupBy({
+      by: ["location"],
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+    }),
   ]);
 
   // Reshape grouped results into flat maps for easy frontend consumption
@@ -151,6 +159,11 @@ async function getAnalytics(req, res) {
     return acc;
   }, {});
 
+  const locationMap = byLocation.reduce((acc, row) => {
+    acc[row.location] = row._count.id;
+    return acc;
+  }, {});
+
   return res.json({
     total_incidents: totalCount,
     fatal_potential_count: fatalCount,
@@ -159,6 +172,7 @@ async function getAnalytics(req, res) {
     ),
     by_risk_level: riskLevelMap,
     by_life_saving_rule: lifeSavingRuleMap,
+    by_location: locationMap,
   });
 }
 

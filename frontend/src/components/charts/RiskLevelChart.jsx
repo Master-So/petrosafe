@@ -38,33 +38,32 @@ export default function RiskLevelChart({ analytics = {} }) {
       textStyle: { color: '#111827', fontSize: 12, fontFamily: 'Inter, sans-serif' },
     },
     legend: {
-      orient: 'vertical',
-      right: '10%',
-      top: 'middle',
-      itemWidth: 8,
-      itemHeight: 8,
-      icon: 'rect',
-      textStyle: { color: '#6B7280', fontSize: 11, fontFamily: 'Inter, sans-serif', fontWeight: 600 },
+      orient: 'horizontal',
+      bottom: 0,
+      left: 'center',
+      itemWidth: 10,
+      itemHeight: 10,
+      itemGap: 15,
+      textStyle: {
+        rich: {
+          name: { width: 55, color: '#6B7280', fontSize: 10, fontWeight: 600 },
+          count: { color: '#111827', fontSize: 10, fontWeight: 700 }
+        }
+      },
       formatter: (name) => {
         const item = data.find(d => d.name === name);
         const count = item ? item.value : 0;
-        return `{name|${name}}  {count|${count} events}`;
-      },
-      textStyle: {
-        rich: {
-          name: { width: 60, color: '#6B7280', fontSize: 11, fontWeight: 600 },
-          count: { color: '#111827', fontSize: 11, fontWeight: 700 }
-        }
+        return `{name|${name}} {count|${count}}`;
       }
     },
     title: {
       text: hasData ? `{val|${total}}\n{sub|TOTAL INCIDENTS}` : '{val|0}\n{sub|NO DATA}',
-      left: '29%',
-      top: 'center',
-      textAlign: 'center',
+      left: 'center', 
+      top: '35%', // Shifted slightly higher to visually center inside the pie
       textStyle: {
+        align: 'center', // Centers the multi-line text block properly
         rich: {
-          val: { fontSize: 28, fontWeight: 900, color: '#111827', lineHeight: 32 },
+          val: { fontSize: 26, fontWeight: 900, color: '#111827', lineHeight: 28 },
           sub: { fontSize: 9, fontWeight: 700, color: '#9CA3AF' }
         }
       }
@@ -73,8 +72,8 @@ export default function RiskLevelChart({ analytics = {} }) {
       {
         name: 'Risk Level',
         type: 'pie',
-        radius: ['60%', '85%'],
-        center: ['30%', '50%'],
+        radius: ['52%', '75%'], // Increased inner radius so text doesn't touch edges
+        center: ['50%', '45%'], 
         avoidLabelOverlap: false,
         label: { show: false },
         labelLine: { show: false },

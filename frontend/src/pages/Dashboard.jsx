@@ -5,6 +5,7 @@ import IncidentTable from '../components/IncidentTable';
 import Toast from '../components/Toast';
 import RiskLevelChart from '../components/charts/RiskLevelChart';
 import LifeSavingRulesChart from '../components/charts/LifeSavingRulesChart';
+import Location3DChart from '../components/charts/Location3DChart';
 import { getIncidents, getAnalytics, checkHealth } from '../services/api';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
@@ -102,14 +103,17 @@ export default function Dashboard() {
 
         <KpiCards analytics={analytics || {}} incidents={incidents} />
 
-        {/* Charts in a dashed border block matching reference */}
+        {/* Charts block */}
         <div className="border border-blue-400 border-dashed rounded-md p-4 bg-white">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 divide-x divide-gray-100">
-            <div className="pl-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <div className="md:px-4 py-4 md:py-0">
               <RiskLevelChart analytics={analytics || {}} />
             </div>
-            <div className="pl-6">
+            <div className="md:px-4 py-4 md:py-0">
               <LifeSavingRulesChart analytics={analytics || {}} />
+            </div>
+            <div className="md:px-4 py-4 md:py-0">
+              <Location3DChart analytics={analytics || {}} />
             </div>
           </div>
         </div>
