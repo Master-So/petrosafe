@@ -116,14 +116,14 @@ export default function Dashboard() {
         <div className="bg-white border border-gray-200 rounded-md p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
-              RECENT COMMAND CENTER INCIDENT LOGS (AI & MANUAL DETECTION)
+              RECENT COMMAND CENTER INCIDENT LOGS (CRITICAL INCIDENTS)
             </h2>
             <div className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-200">
               REAL-TIME EVENT FEED
             </div>
           </div>
           <IncidentTable
-            incidents={incidents}
+            incidents={incidents.filter(i => (i.sif_precursor_density_score >= 7 || i.local_risk_level === 'SIF-HIGH'))}
             loading={loading}
             onRefresh={() => fetchData(true)}
           />

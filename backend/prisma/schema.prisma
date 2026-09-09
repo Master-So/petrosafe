@@ -22,6 +22,9 @@ model Incident {
   location   String   @db.VarChar(255)
   short_cause String  @db.VarChar(255)
   description String  @db.Text
+  primary_cause_category String? @db.VarChar(100)
+  equipment_failed       Json?   // JSON array of strings
+  shift                  String? @db.VarChar(50)
 
   // ── Local AI model outputs ────────────────────────────────────────────────
   local_summary    String @db.Text
