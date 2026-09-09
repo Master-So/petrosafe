@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '../components/Header';
 import KpiCards from '../components/KpiCards';
 import IncidentTable from '../components/IncidentTable';
 import Toast from '../components/Toast';
@@ -57,12 +56,7 @@ export default function Dashboard() {
   }, [fetchData]);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
-
-      <Header
-        systemStatus={systemStatus}
-        lastUpdated={lastUpdated}
-      />
+    <div className="flex-1 flex flex-col w-full">
 
       {/* Toolbar / Legend strip matching reference */}
       <div className="bg-white border-b border-gray-200 py-2">

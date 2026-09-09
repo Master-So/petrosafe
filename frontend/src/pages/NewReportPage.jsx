@@ -85,7 +85,7 @@ export default function NewReportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
+    <div className="flex-1 flex flex-col w-full">
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
