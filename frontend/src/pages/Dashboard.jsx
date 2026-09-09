@@ -4,7 +4,8 @@ import IncidentTable from '../components/IncidentTable';
 import Toast from '../components/Toast';
 import RiskLevelChart from '../components/charts/RiskLevelChart';
 import LifeSavingRulesChart from '../components/charts/LifeSavingRulesChart';
-import Location3DChart from '../components/charts/Location3DChart';
+import IncidentDensityMap from '../components/charts/IncidentDensityMap';
+import DashboardTimelineChart from '../components/charts/DashboardTimelineChart';
 import { getIncidents, getAnalytics, checkHealth } from '../services/api';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
@@ -98,17 +99,25 @@ export default function Dashboard() {
         <KpiCards analytics={analytics || {}} incidents={incidents} />
 
         {/* Charts block */}
-        <div className="border border-blue-400 border-dashed rounded-md p-4 bg-white">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-            <div className="md:px-4 py-4 md:py-0">
+        <div className="space-y-6">
+          {/* Top Row: Risk Level & Life-Saving Rules */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4">
               <RiskLevelChart analytics={analytics || {}} />
             </div>
-            <div className="md:px-4 py-4 md:py-0">
+            <div className="bg-white border border-gray-200 rounded-md shadow-sm p-4">
               <LifeSavingRulesChart analytics={analytics || {}} />
             </div>
-            <div className="md:px-4 py-4 md:py-0">
-              <Location3DChart analytics={analytics || {}} />
-            </div>
+          </div>
+
+          {/* Density Map Row */}
+          <div>
+            <IncidentDensityMap incidents={incidents} />
+          </div>
+
+          {/* Timeline Row */}
+          <div>
+            <DashboardTimelineChart incidents={incidents} />
           </div>
         </div>
 
