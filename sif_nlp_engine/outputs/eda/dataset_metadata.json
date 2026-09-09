@@ -1,0 +1,83 @@
+{
+  "source_path": "/home/arjun/sif_backend/data/raw/IHMStefanini_industrial_safety_and_health_database_with_accidents_description.csv",
+  "file_sha256": "d094b59c96c272d567734d7c68bfaf6c007316157a72eefd344f3222983d4cbf",
+  "original_rows": 425,
+  "loaded_rows": 425,
+  "original_columns": [
+    "Unnamed: 0",
+    "Data",
+    "Countries",
+    "Local",
+    "Industry Sector",
+    "Accident Level",
+    "Potential Accident Level",
+    "Genre",
+    "Employee or Third Party",
+    "Critical Risk",
+    "Description"
+  ],
+  "semantic_columns": [
+    "Data",
+    "Countries",
+    "Local",
+    "Industry Sector",
+    "Accident Level",
+    "Potential Accident Level",
+    "Genre",
+    "Employee or Third Party",
+    "Critical Risk",
+    "Description"
+  ],
+  "additional_columns": [],
+  "dropped_artifacts": [
+    "Unnamed: 0"
+  ],
+  "has_nulls": false,
+  "null_counts": {
+    "Data": 0,
+    "Countries": 0,
+    "Local": 0,
+    "Industry Sector": 0,
+    "Accident Level": 0,
+    "Potential Accident Level": 0,
+    "Genre": 0,
+    "Employee or Third Party": 0,
+    "Critical Risk": 0,
+    "Description": 0
+  },
+  "generated_at": "2026-09-09T15:00:20.491675+00:00",
+  "preprocessing_version": "0.1.0",
+  "random_state": 42,
+  "quality_metrics": {
+    "total_audited_rows": 425,
+    "exact_duplicate_rows": 13,
+    "repeated_description_rows": 26,
+    "conflicting_description_groups_count": 1,
+    "conflicting_rows_count": 2,
+    "conflicting_groups_detail": [
+      {
+        "description_clean": "at moments when the maperu truck of plate f1t 878, returned from the city of pasco to the unit transporting a consultant...",
+        "report_ids": [
+          "R000167",
+          "R000168"
+        ],
+        "accident_levels": [
+          "V",
+          "IV"
+        ],
+        "proxy_labels": [
+          1,
+          1
+        ],
+        "row_count": 2
+      }
+    ],
+    "modeling_rows_count": 410
+  },
+  "proxy_label_distribution": {
+    "0_non_sif": 244,
+    "1_sif": 166,
+    "total": 410,
+    "sif_percentage": 40.49
+  }
+}

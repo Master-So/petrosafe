@@ -1,0 +1,60 @@
+{
+  "model_version": "0.1.0",
+  "label_definition": "development_proxy",
+  "train_samples": 287,
+  "best_k": {
+    "bge": {
+      "optimal_k": 50,
+      "cv_results": {
+        "3": {
+          "mean_f1": 0.5119,
+          "mean_pr_auc": 0.5019
+        },
+        "5": {
+          "mean_f1": 0.5158,
+          "mean_pr_auc": 0.5233
+        },
+        "10": {
+          "mean_f1": 0.5507,
+          "mean_pr_auc": 0.5188
+        },
+        "20": {
+          "mean_f1": 0.5223,
+          "mean_pr_auc": 0.4888
+        },
+        "50": {
+          "mean_f1": 0.4892,
+          "mean_pr_auc": 0.5655
+        }
+      }
+    },
+    "minilm": {
+      "optimal_k": 50,
+      "cv_results": {
+        "3": {
+          "mean_f1": 0.4337,
+          "mean_pr_auc": 0.4419
+        },
+        "5": {
+          "mean_f1": 0.4519,
+          "mean_pr_auc": 0.5003
+        },
+        "10": {
+          "mean_f1": 0.4718,
+          "mean_pr_auc": 0.5021
+        },
+        "20": {
+          "mean_f1": 0.3936,
+          "mean_pr_auc": 0.4694
+        },
+        "50": {
+          "mean_f1": 0.2275,
+          "mean_pr_auc": 0.5252
+        }
+      }
+    }
+  },
+  "selected_model": "bge",
+  "decision_threshold": 0.5,
+  "disclaimer": "The current SIF label is a development proxy derived from Potential Accident Level and is not an official OIL/IOGP SIF classification."
+}

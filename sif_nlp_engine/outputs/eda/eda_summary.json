@@ -1,0 +1,114 @@
+{
+  "timestamp": "2026-09-09T15:00:20.491458+00:00",
+  "dataset_dimensions": {
+    "raw_rows": 425,
+    "raw_columns": 11,
+    "audited_rows": 425,
+    "modeling_rows": 410
+  },
+  "missing_values": {
+    "report_id": 0,
+    "Data": 0,
+    "Countries": 0,
+    "Local": 0,
+    "Industry Sector": 0,
+    "Accident Level": 0,
+    "Potential Accident Level": 0,
+    "Genre": 0,
+    "Employee or Third Party": 0,
+    "Critical Risk": 0,
+    "Description": 0
+  },
+  "quality_audit": {
+    "total_audited_rows": 425,
+    "exact_duplicate_rows": 13,
+    "repeated_description_rows": 26,
+    "conflicting_description_groups_count": 1,
+    "conflicting_rows_count": 2,
+    "conflicting_groups_detail": [
+      {
+        "description_clean": "at moments when the maperu truck of plate f1t 878, returned from the city of pasco to the unit transporting a consultant...",
+        "report_ids": [
+          "R000167",
+          "R000168"
+        ],
+        "accident_levels": [
+          "V",
+          "IV"
+        ],
+        "proxy_labels": [
+          1,
+          1
+        ],
+        "row_count": 2
+      }
+    ],
+    "modeling_rows_count": 410
+  },
+  "potential_accident_level_distribution": {
+    "IV": 143,
+    "III": 106,
+    "II": 95,
+    "I": 49,
+    "V": 31,
+    "VI": 1
+  },
+  "proxy_label_distribution_full": {
+    "0_non_sif": 250,
+    "1_sif": 175,
+    "total": 425,
+    "sif_percentage": 41.18
+  },
+  "proxy_label_distribution_modeling": {
+    "0_non_sif": 244,
+    "1_sif": 166,
+    "total": 410,
+    "sif_percentage": 40.49
+  },
+  "split_summary": {
+    "test_size": 0.3,
+    "random_state": 42,
+    "train_rows": 287,
+    "test_rows": 123,
+    "train_class_distribution": {
+      "0_non_sif": 171,
+      "1_sif": 116,
+      "sif_percentage": 40.42
+    },
+    "test_class_distribution": {
+      "0_non_sif": 73,
+      "1_sif": 50,
+      "sif_percentage": 40.65
+    },
+    "verification_status": {
+      "id_disjoint": true,
+      "text_disjoint": true,
+      "no_nulls": true,
+      "classes_preserved": true,
+      "stratification_verified": true
+    }
+  },
+  "sanity_benchmark_comparison": {
+    "benchmarks": {
+      "approx_raw_rows": 425,
+      "approx_non_sif": 250,
+      "approx_sif": 175,
+      "approx_modeling_rows": 410,
+      "known_levels": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI"
+      ]
+    },
+    "variances": {
+      "raw_rows_diff": 0,
+      "non_sif_diff": 0,
+      "sif_diff": 0,
+      "modeling_rows_diff": 0
+    }
+  },
+  "proxy_label_caveat": "The current SIF label is a development proxy derived from Potential Accident Level and is not an official OIL/IOGP SIF classification."
+}

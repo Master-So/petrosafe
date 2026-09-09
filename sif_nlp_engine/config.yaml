@@ -1,0 +1,71 @@
+# ==============================================================================
+# SIF Backend Configuration (Problem Statement ID: 26165)
+# AI/NLP Engine to Detect Serious Injury & Fatality (SIF) Precursors
+# ==============================================================================
+
+project:
+  name: "sif_backend"
+  version: "0.1.0"
+  description: "AI/NLP Engine to Detect Serious Injury & Fatality (SIF) Precursors in Safety Reports"
+
+# Data paths (can be overridden by SIF_DATA_PATH environment variable)
+data:
+  raw_path: "data/raw/IHMStefanini_industrial_safety_and_health_database_with_accidents_description.csv"
+  processed_dir: "data/processed"
+  eda_dir: "outputs/eda"
+
+# Temporary Development Proxy Label Mapping
+# CAVEAT: The current SIF label is a development proxy derived from Potential Accident Level
+# and is not an official OIL/IOGP SIF classification.
+proxy_label:
+  enabled: true
+  source_column: "Potential Accident Level"
+  target_column: "sif_proxy"
+  positive_levels:
+    - "IV"
+    - "V"
+    - "VI"
+  negative_levels:
+    - "I"
+    - "II"
+    - "III"
+  disclaimer: "The current SIF label is a development proxy derived from Potential Accident Level and is not an official OIL/IOGP SIF classification."
+
+# Dataset Splitting Settings
+split:
+  test_size: 0.30
+  random_state: 42
+  stratify_col: "sif_proxy"
+
+# Text Preprocessing Settings
+preprocessing:
+  version: "0.1.0"
+  unicode_form: "NFKC"
+  text_column: "Description"
+  clean_text_column: "description_clean"
+
+# Model Configuration
+model:
+  version: "0.1.0"
+  label_definition: "development_proxy"
+  embedding_model: "BAAI/bge-small-en-v1.5"
+  comparison_embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+  k: 10
+  threshold: 0.5
+
+# Prototype Precursor Risk Weights & Categories
+# Note: Prototype engineering thresholds only, not official OIL/IOGP risk methodology.
+risk:
+  weights:
+    energy_exposure: 20
+    isolation_failure: 25
+    line_of_fire: 20
+    fall_exposure: 20
+    confined_space: 25
+    hot_work: 20
+    barrier_failure: 15
+  categories:
+    low: [0, 29]
+    medium: [30, 59]
+    high: [60, 79]
+    critical: [80, 100]

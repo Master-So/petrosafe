@@ -1,0 +1,61 @@
+================================================================================
+SIF BACKEND — EXPLORATORY DATA ANALYSIS & QUALITY AUDIT REPORT
+================================================================================
+Timestamp (UTC)     : 2026-09-09T15:00:20.491458+00:00
+Source File         : /home/arjun/sif_backend/data/raw/IHMStefanini_industrial_safety_and_health_database_with_accidents_description.csv
+File SHA-256        : d094b59c96c272d567734d7c68bfaf6c007316157a72eefd344f3222983d4cbf
+
+1. DATASET DIMENSIONS
+----------------------------------------
+Raw Rows Loaded     : 425
+Raw Columns         : 11
+Audited Total Rows  : 425
+Clean Modeling Rows : 410
+
+2. DATA QUALITY AUDIT FINDINGS
+----------------------------------------
+Exact Duplicate Rows             : 13
+Repeated Description Rows        : 26
+Conflicting Description Groups   : 1
+Conflicting Rows Excluded        : 2
+
+3. POTENTIAL ACCIDENT LEVEL (PAL) DISTRIBUTION
+----------------------------------------
+Level I    :   49
+Level II   :   95
+Level III  :  106
+Level IV   :  143
+Level V    :   31
+Level VI   :    1
+
+4. SIF DEVELOPMENT PROXY LABEL DISTRIBUTION (FULL AUDITED DATASET)
+----------------------------------------
+Class 0 (Non-SIF) :  250 (58.82%)
+Class 1 (SIF)     :  175 (41.18%)
+Total             :  425
+
+5. SIF DEVELOPMENT PROXY LABEL DISTRIBUTION (MODELING DATASET)
+----------------------------------------
+Class 0 (Non-SIF) :  244 (59.51%)
+Class 1 (SIF)     :  166 (40.49%)
+Total Modeling    :  410
+
+6. LEAKAGE-SAFE TRAIN / TEST SPLIT (70% Train / 30% Test, Seed 42)
+----------------------------------------
+Train Rows : 287
+Train Classes: {'0_non_sif': 171, '1_sif': 116, 'sif_percentage': 40.42}
+Test Rows  : 123
+Test Classes : {'0_non_sif': 73, '1_sif': 50, 'sif_percentage': 40.65}
+Verification: {'id_disjoint': True, 'text_disjoint': True, 'no_nulls': True, 'classes_preserved': True, 'stratification_verified': True}
+
+7. SANITY BENCHMARK COMPARISON
+----------------------------------------
+Raw Rows Variance vs ~425      : +0
+Non-SIF Variance vs ~250       : +0
+SIF Variance vs ~175           : +0
+Modeling Rows vs ~410          : +0
+
+8. REGULATORY DISCLAIMER & PROXY CAVEAT
+----------------------------------------
+The current SIF label is a development proxy derived from Potential Accident Level and is not an official OIL/IOGP SIF classification.
+================================================================================
