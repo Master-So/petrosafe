@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ReactECharts from 'echarts-for-react';
 
-const COLORS = ['#F59E0B', '#EAB308', '#3B82F6', '#10B981', '#9CA3AF'];
+const COLORS = ['#FF3B30', '#FF9500', '#FFCC00', '#34C759', '#007AFF']; // Apple System Colors
 
 export default function LifeSavingRulesChart({ analytics = {} }) {
   const { categories, values } = useMemo(() => {

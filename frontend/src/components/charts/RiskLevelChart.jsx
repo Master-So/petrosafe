@@ -4,8 +4,8 @@ import ReactECharts from 'echarts-for-react';
 const RISK_COLORS = {
   'CRITICAL': '#EF4444',
   'SIF-HIGH': '#F59E0B',
-  'MEDIUM':   '#EAB308',
-  'LOW':      '#3B82F6',
+  'MEDIUM': '#EAB308',
+  'LOW': '#3B82F6',
 };
 
 // Map backend risk levels to UI risk levels for color matching
@@ -58,7 +58,7 @@ export default function RiskLevelChart({ analytics = {} }) {
     },
     title: {
       text: hasData ? `{val|${total}}\n{sub|TOTAL INCIDENTS}` : '{val|0}\n{sub|NO DATA}',
-      left: 'center', 
+      left: 'center',
       top: '35%', // Shifted slightly higher to visually center inside the pie
       textStyle: {
         align: 'center', // Centers the multi-line text block properly
@@ -73,7 +73,7 @@ export default function RiskLevelChart({ analytics = {} }) {
         name: 'Risk Level',
         type: 'pie',
         radius: ['52%', '75%'], // Increased inner radius so text doesn't touch edges
-        center: ['50%', '45%'], 
+        center: ['50%', '45%'],
         avoidLabelOverlap: false,
         label: { show: false },
         labelLine: { show: false },

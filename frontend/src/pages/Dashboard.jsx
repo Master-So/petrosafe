@@ -64,11 +64,11 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center space-x-4 text-[9px] font-bold text-gray-500 uppercase tracking-widest">
             <span>SEVERITY SCALING:</span>
-            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-red-500 rounded-full"/><span>Critical</span></div>
-            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-yellow-500 rounded-full"/><span>High</span></div>
-            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"/><span>Medium</span></div>
-            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full"/><span>Low</span></div>
-            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-green-500 rounded-full"/><span>Negligible</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-red-500 rounded-full" /><span>Critical</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-yellow-500 rounded-full" /><span>High</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-yellow-400 rounded-full" /><span>Medium</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-blue-500 rounded-full" /><span>Low</span></div>
+            <div className="flex items-center space-x-1.5"><div className="w-1.5 h-1.5 bg-green-500 rounded-full" /><span>Negligible</span></div>
           </div>
           {refreshing && (
             <div className="flex items-center text-[10px] text-gray-400 font-bold">

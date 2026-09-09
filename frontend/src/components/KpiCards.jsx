@@ -101,7 +101,7 @@ export default function KpiCards({ analytics = {}, incidents = [] }) {
             {card.value}
           </div>
 
-          <div className="flex items-center justify-between mt-auto">
+          <div className="flex items-center mt-auto">
             <div className="text-[10px] font-bold flex items-center space-x-1">
               {card.subPrefixColor === 'text-red-500' ? (
                 <TrendingDown className={`w-3 h-3 ${card.subPrefixColor}`} />
@@ -111,11 +111,6 @@ export default function KpiCards({ analytics = {}, incidents = [] }) {
               <span className={card.subPrefixColor}>{card.subPrefix}</span>
               <span className="text-gray-400 font-medium ml-1">{card.subSuffix}</span>
             </div>
-            
-            {/* Simple mock trendline svg matching reference image */}
-            <svg width="40" height="20" viewBox="0 0 40 20" fill="none" className={card.trendColor}>
-              <path d="M0 15L10 10L20 18L30 5L40 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
           </div>
         </div>
       ))}
