@@ -36,7 +36,7 @@ function validateIncidentInput({ date, location, short_cause, description }) {
  * 4. Return the created record (201)
  */
 async function createIncident(req, res, next) {
-  const { date, location, short_cause, description } = req.body;
+  const { date, location, short_cause, description, primary_cause_category, equipment_failed, shift } = req.body;
 
   // ── Validation ─────────────────────────────────────────────────────────────
   const missing = validateIncidentInput({ date, location, short_cause, description });
@@ -50,7 +50,7 @@ async function createIncident(req, res, next) {
   // ── AI Enrichment ──────────────────────────────────────────────────────────
   let enriched;
   try {
-    enriched = await analyzeIncident({ date, location, short_cause, description });
+    enriched = await analyzeIncident({ date, location, short_cause, description, primary_cause_category, equipment_failed, shift });
   } catch (err) {
     if (err instanceof AiServiceError) {
       // Log and propagate with the HTTP status code the error carries
@@ -70,6 +70,9 @@ async function createIncident(req, res, next) {
       location: enriched.location ?? location,
       short_cause: enriched.short_cause ?? short_cause,
       description: enriched.description ?? description,
+      primary_cause_category: enriched.primary_cause_category ?? primary_cause_category,
+      equipment_failed: enriched.equipment_failed ?? equipment_failed,
+      shift: enriched.shift ?? shift,
       local_summary: enriched.local_summary,
       local_risk_level: enriched.local_risk_level,
       sif_precursor_density_score: enriched.sif_precursor_density_score,
@@ -112,6 +115,7 @@ async function getAnalytics(req, res) {
     byRiskLevel,
     byLifeSavingRule,
     byLocation,
+    rawAdvancedData,
   ] = await Promise.all([
     // 1. Total count
     prisma.incident.count(),
@@ -146,6 +150,15 @@ async function getAnalytics(req, res) {
       _count: { id: true },
       orderBy: { _count: { id: "desc" } },
     }),
+
+    // 7. Fetch raw data for advanced JS aggregations (timeline, equipments, category)
+    prisma.incident.findMany({
+      select: {
+        primary_cause_category: true,
+        equipment_failed: true,
+        date: true,
+      }
+    }),
   ]);
 
   // Reshape grouped results into flat maps for easy frontend consumption
@@ -164,6 +177,36 @@ async function getAnalytics(req, res) {
     return acc;
   }, {});
 
+  // Advanced Aggregations
+  const categoryMap = {};
+  const equipmentMap = {};
+  const timelineMap = {}; // "YYYY-MM": count
+
+  rawAdvancedData.forEach((row) => {
+    // 1. By Category
+    if (row.primary_cause_category) {
+      categoryMap[row.primary_cause_category] = (categoryMap[row.primary_cause_category] || 0) + 1;
+    }
+
+    // 2. Equipment Failures (JSON array)
+    if (Array.isArray(row.equipment_failed)) {
+      row.equipment_failed.forEach((eq) => {
+        equipmentMap[eq] = (equipmentMap[eq] || 0) + 1;
+      });
+    }
+
+    // 3. Timeline
+    if (row.date) {
+      const d = new Date(row.date);
+      if (!isNaN(d.getTime())) {
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const key = `${yyyy}-${mm}`;
+        timelineMap[key] = (timelineMap[key] || 0) + 1;
+      }
+    }
+  });
+
   return res.json({
     total_incidents: totalCount,
     fatal_potential_count: fatalCount,
@@ -173,6 +216,9 @@ async function getAnalytics(req, res) {
     by_risk_level: riskLevelMap,
     by_life_saving_rule: lifeSavingRuleMap,
     by_location: locationMap,
+    by_category: categoryMap,
+    equipment_failures: equipmentMap,
+    timeline: timelineMap,
   });
 }
 

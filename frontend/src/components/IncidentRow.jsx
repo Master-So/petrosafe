@@ -31,7 +31,7 @@ export default function IncidentRow({ incident }) {
   })() : 'N/A';
 
   // Format ID to INC-XXXX
-  const displayId = `INC-${id.substring(0,4).toUpperCase()}`;
+  const displayId = `INC-${id.substring(0, 4).toUpperCase()}`;
 
   // Severity pill
   let pillText = local_risk_level || 'NEGLIGIBLE';
@@ -54,7 +54,7 @@ export default function IncidentRow({ incident }) {
 
   return (
     <>
-      <tr 
+      <tr
         onClick={() => setExpanded(!expanded)}
         className="hover:bg-gray-50 transition-colors cursor-pointer"
       >
@@ -80,7 +80,7 @@ export default function IncidentRow({ incident }) {
           </span>
         </td>
       </tr>
-      
+
       {/* Expanded Row Content */}
       {expanded && (
         <tr className="bg-gray-50 border-b border-gray-100">
@@ -94,7 +94,7 @@ export default function IncidentRow({ incident }) {
                   {description}
                 </p>
               </div>
-              
+
               {local_summary && (
                 <div>
                   <span className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">

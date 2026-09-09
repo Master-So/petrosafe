@@ -6,7 +6,7 @@ Covers request payloads, local model responses, Gemini enrichment,
 and the unified process-report response.
 """
 
-from typing import List, Literal
+from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 
 
@@ -37,6 +37,9 @@ class ReportRequest(BaseModel):
             "Contractor fell from 4m scaffolding platform without harness, sustaining wrist fracture."
         ],
     )
+    primary_cause_category: Optional[str] = Field(None, description="Primary cause category")
+    equipment_failed: Optional[List[str]] = Field(None, description="List of equipment that failed")
+    shift: Optional[str] = Field(None, description="Day or Night shift")
 
 
 # ── Local model response ────────────────────────────────────────────────────
@@ -140,6 +143,9 @@ class ProcessReportResponse(BaseModel):
     location: str
     short_cause: str
     description: str
+    primary_cause_category: Optional[str] = None
+    equipment_failed: Optional[List[str]] = None
+    shift: Optional[str] = None
 
     # Local model outputs
     local_summary: str

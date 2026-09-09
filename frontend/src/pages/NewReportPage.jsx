@@ -17,7 +17,10 @@ const DEMO_PRESETS = [
     data: {
       location: "Duliajan Rig #7",
       short_cause: "Dropped Object / Line of Fire",
-      description: "During casing installation, a 12kg hydraulic torque wrench slipped from an unrated safety lanyard at 15 meters above the drill floor. The tool landed within 1 meter of a roustabout standing in the rotary table area. No injuries reported, but high-impact zone was unprotected."
+      description: "During casing installation, a 12kg hydraulic torque wrench slipped from an unrated safety lanyard at 15 meters above the drill floor. The tool landed within 1 meter of a roustabout standing in the rotary table area. No injuries reported, but high-impact zone was unprotected.",
+      primary_cause_category: 'Human Error',
+      equipment_failed: [],
+      shift: 'Day'
     }
   },
   {
@@ -25,7 +28,10 @@ const DEMO_PRESETS = [
     data: {
       location: "Moran Gathering Station",
       short_cause: "Chemical Exposure / Pressurized Line",
-      description: "During transfer of corrosion inhibitor chemical, an uninspected flange gasket failed under 45 psi, releasing liquid spray towards two field operators. Eye-wash station was engaged immediately; operators were wearing standard PPE with eye shields."
+      description: "During transfer of corrosion inhibitor chemical, an uninspected flange gasket failed under 45 psi, releasing liquid spray towards two field operators. Eye-wash station was engaged immediately; operators were wearing standard PPE with eye shields.",
+      primary_cause_category: 'Protocol Not Followed',
+      equipment_failed: [],
+      shift: 'Night'
     }
   },
   {
@@ -33,10 +39,25 @@ const DEMO_PRESETS = [
     data: {
       location: "Jorhat Compressor Terminal",
       short_cause: "Minor paper cut",
-      description: "An employee was opening a newly delivered cardboard box of printer paper in the office. While pulling the cardboard flap, they sustained a minor paper cut to their right index finger. They washed the finger with soap and water and applied a small band-aid from the office first-aid kit. The employee immediately returned to normal administrative duties without any further medical attention required."
+      description: "An employee was opening a newly delivered cardboard box of printer paper in the office. While pulling the cardboard flap, they sustained a minor paper cut to their right index finger. They washed the finger with soap and water and applied a small band-aid from the office first-aid kit. The employee immediately returned to normal administrative duties without any further medical attention required.",
+      primary_cause_category: 'Other',
+      equipment_failed: [],
+      shift: 'Day'
+    }
+  },
+  {
+    name: "Pump Failure",
+    data: {
+      location: "Digboi Rig #4",
+      short_cause: "High Pressure Pump Failure",
+      description: "During normal drilling operations, the main mud pump experienced a catastrophic seal failure resulting in a loss of pressure. The drill pipe became temporarily stuck. Maintenance investigation found worn out valves and damaged pump seals.",
+      primary_cause_category: 'Equipment Failure',
+      equipment_failed: ['Pumps', 'Valves', 'Drill Pipe'],
+      shift: 'Night'
     }
   }
 ];
+
 
 export default function NewReportPage() {
   const navigate = useNavigate();
@@ -46,8 +67,39 @@ export default function NewReportPage() {
     date: getTodayString(),
     location: LOCATION_PRESETS[0],
     short_cause: '',
-    description: ''
+    description: '',
+    primary_cause_category: 'Equipment Failure',
+    equipment_failed: [],
+    shift: 'Day'
   });
+
+  const CATEGORY_OPTIONS = [
+    "Equipment Failure",
+    "Overloaded",
+    "Protocol Not Followed",
+    "Environmental Hazard",
+    "Human Error",
+    "Other"
+  ];
+
+  const EQUIPMENT_OPTIONS = [
+    "Drill Pipe",
+    "Valves",
+    "Blowout Preventer",
+    "Compressor",
+    "Pumps",
+    "Other"
+  ];
+
+  const handleEquipmentChange = (eq) => {
+    setFormData(prev => {
+      const isSelected = prev.equipment_failed.includes(eq);
+      const newEquipment = isSelected 
+        ? prev.equipment_failed.filter(item => item !== eq)
+        : [...prev.equipment_failed, eq];
+      return { ...prev, equipment_failed: newEquipment };
+    });
+  };
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -85,7 +137,7 @@ export default function NewReportPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
+    <div className="flex-1 flex flex-col w-full">
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14">
@@ -153,7 +205,18 @@ export default function NewReportPage() {
 
             <div className="flex items-center justify-between pt-4 border-t border-gray-200">
               <button
-                onClick={() => { setSuccessResult(null); setFormData({ date: getTodayString(), location: LOCATION_PRESETS[0], short_cause: '', description: '' }); }}
+                onClick={() => { 
+                  setSuccessResult(null); 
+                  setFormData({ 
+                    date: getTodayString(), 
+                    location: LOCATION_PRESETS[0], 
+                    short_cause: '', 
+                    description: '',
+                    primary_cause_category: 'Equipment Failure',
+                    equipment_failed: [],
+                    shift: 'Day'
+                  }); 
+                }}
                 className="btn-secondary px-5 py-2 text-xs"
               >
                 SUBMIT ANOTHER
@@ -217,6 +280,51 @@ export default function NewReportPage() {
                   onChange={(e) => setFormData({ ...formData, short_cause: e.target.value })}
                   className="w-full text-xs px-3 py-2 input-flat font-medium" />
               </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1.5">Primary Cause Category</label>
+                  <select disabled={loading} value={formData.primary_cause_category}
+                    onChange={(e) => setFormData({ ...formData, primary_cause_category: e.target.value, equipment_failed: [] })}
+                    className="w-full text-xs px-3 py-2 input-flat font-medium">
+                    {CATEGORY_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1.5">Shift</label>
+                  <div className="flex space-x-4 mt-2">
+                    <label className="flex items-center space-x-2 text-xs font-medium text-gray-700">
+                      <input type="radio" value="Day" checked={formData.shift === 'Day'} onChange={(e) => setFormData({...formData, shift: e.target.value})} disabled={loading} />
+                      <span>Day Shift</span>
+                    </label>
+                    <label className="flex items-center space-x-2 text-xs font-medium text-gray-700">
+                      <input type="radio" value="Night" checked={formData.shift === 'Night'} onChange={(e) => setFormData({...formData, shift: e.target.value})} disabled={loading} />
+                      <span>Night Shift</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {formData.primary_cause_category === 'Equipment Failure' && (
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1.5">Equipment Failed (Select multiple)</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2 p-3 border border-gray-200 rounded bg-gray-50">
+                    {EQUIPMENT_OPTIONS.map(eq => (
+                      <label key={eq} className="flex items-center space-x-2 text-xs font-medium text-gray-700 cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          value={eq}
+                          checked={formData.equipment_failed.includes(eq)}
+                          onChange={() => handleEquipmentChange(eq)}
+                          disabled={loading} 
+                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                        />
+                        <span>{eq}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-[10px] font-bold text-gray-700 uppercase tracking-widest mb-1.5">Description</label>
