@@ -1,0 +1,138 @@
+# Safety Precursor and Barrier Failure Pattern Definitions
+# Configurable industrial safety domain keywords for HSE incident analysis
+
+precursors:
+  energy_exposure:
+    name: "Energy Exposure"
+    keywords:
+      - pressure
+      - pressurized
+      - stored energy
+      - residual energy
+      - energized
+      - electrical
+      - hydraulic
+      - pneumatic
+      - steam
+      - 440v
+      - high voltage
+
+  isolation_failure:
+    name: "Isolation Failure"
+    keywords:
+      - isolation not verified
+      - isolation not confirmed
+      - without isolation
+      - loto not
+      - zero energy not verified
+      - zero energy isolation
+      - zero energy
+      - isolation
+      - lock out tag out
+      - lockout
+      - tagout
+      - not isolated
+      - opened before confirming
+
+  line_of_fire:
+    name: "Line of Fire"
+    keywords:
+      - line of fire
+      - struck by
+      - caught between
+      - moving object
+      - dropped object
+      - pressure release
+      - projectile
+      - pinch point
+      - tightens the fingers
+      - finger traps
+      - between the
+      - hit by
+
+  fall_exposure:
+    name: "Fall Exposure"
+    keywords:
+      - scaffold
+      - scaffolding
+      - working at height
+      - ladder
+      - fall
+      - harness
+      - falling
+      - elevation
+      - roof
+      - platform
+
+  confined_space:
+    name: "Confined Space"
+    keywords:
+      - confined space
+      - tank entry
+      - vessel entry
+      - manhole
+      - gas test
+      - oxygen
+      - toxic atmosphere
+      - h2s
+      - hazardous atmosphere
+
+  hot_work:
+    name: "Hot Work"
+    keywords:
+      - welding
+      - grinding
+      - cutting
+      - spark
+      - ignition
+      - torch
+      - flame
+      - burner
+
+barrier_failures:
+  isolation_not_verified:
+    type: "Isolation not verified"
+    keywords:
+      - without isolation
+      - before confirming isolation
+      - not isolated
+      - zero energy not verified
+      - loto not
+      - before confirming zero energy
+
+  missing_permit:
+    type: "Missing permit / authorization"
+    keywords:
+      - without permit
+      - missing permit
+      - no authorization
+      - unapproved
+      - without ptws
+
+  inadequate_ppe:
+    type: "Missing or inadequate PPE"
+    keywords:
+      - without ppe
+      - missing gloves
+      - missing helmet
+      - missing glasses
+      - without safety harness
+      - inadequate ppe
+
+  guard_removed:
+    type: "Machine guard removed / bypassed"
+    keywords:
+      - guard removed
+      - without guard
+      - interlock bypassed
+      - safety device removed
+      - safety switch bypassed
+
+  procedure_not_followed:
+    type: "Procedure not followed"
+    keywords:
+      - procedure not followed
+      - violated procedure
+      - non-compliance
+      - improper technique
+      - shortcuts

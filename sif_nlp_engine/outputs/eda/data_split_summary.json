@@ -1,0 +1,23 @@
+{
+  "test_size": 0.3,
+  "random_state": 42,
+  "train_rows": 287,
+  "test_rows": 123,
+  "train_class_distribution": {
+    "0_non_sif": 171,
+    "1_sif": 116,
+    "sif_percentage": 40.42
+  },
+  "test_class_distribution": {
+    "0_non_sif": 73,
+    "1_sif": 50,
+    "sif_percentage": 40.65
+  },
+  "verification_status": {
+    "id_disjoint": true,
+    "text_disjoint": true,
+    "no_nulls": true,
+    "classes_preserved": true,
+    "stratification_verified": true
+  }
+}
